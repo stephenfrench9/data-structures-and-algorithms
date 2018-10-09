@@ -9,7 +9,18 @@ public class tester {
         a.add(4);
         a.add(5);
         a.add(6);
-        a.add(7);
+        a.remove();
+        a.remove();
+        a.remove();
+        a.remove();
+        a.remove();
+        a.remove();
+        a.remove();
+        a.remove();
+
+
+
+
 
         for(int i:a) {
             System.out.println(i);

@@ -25,7 +25,21 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public T remove() {
-        return null;
+        if(back == null) {
+            return null;
+        } else if (back == front) {
+            T r = back.data;
+            back = null;
+            front = null;
+            return r;
+        }
+
+        T r = back.data;
+        back = back.previous;
+        back.next.previous = null;
+        back.next = null;
+
+        return r;
     }
 
     @Override
@@ -77,7 +91,7 @@ public class DoubleLinkedList<T> implements IList<T> {
 
         @Override
         public boolean hasNext() {
-            if(current==null || current.next == null) {
+            if(current == null) {
                 return false;
             } else {
                 return true;
