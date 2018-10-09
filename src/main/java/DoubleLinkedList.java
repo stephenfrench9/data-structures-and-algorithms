@@ -64,12 +64,58 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public void set(int index, T item) {
-
+        if(valid(index)) {
+            node<T> p = pointAt(index);
+            p.data = item;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
     }
 
     @Override
     public void insert(int index, T item) {
+        if(index >= 0 && index <= size) {
+            if(size == 0) {
+                front = new node<T>(item);
+                back = front;
+                size += 1;
+                return;
+            }
 
+            if(size == index) {
+                back.next = new node<T>(item);
+                back.next.previous = back;
+                back = back.next;
+                size += 1;
+                return;
+            } else {
+                node<T> p = pointAt(index);
+                node<T> inserted = new node<T>(item);
+                inserted.next = p;
+                if(p==front) {
+                    p.previous = inserted;
+                    front = inserted;
+                    size += 1;
+                } else {
+                    node<T> predecessor;
+                    predecessor = p.previous;
+                    predecessor.next = inserted;
+                    p.previous = inserted;
+                    inserted.previous = predecessor;
+                    size += 1;
+                }
+            }
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private node<T> pointAt(int index) {
+        node<T> p = front;
+        for(int k = 1; k <= index; k++) {
+            p = p.next;
+        }
+        return p;
     }
 
     @Override
@@ -84,7 +130,7 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
@@ -95,6 +141,10 @@ public class DoubleLinkedList<T> implements IList<T> {
     @Override
     public Iterator<T> iterator() {
         return new DoubleLinkedListIterator<T>(this.front);
+    }
+
+    private boolean valid(int index) {
+        return index >= 0 && index <= size - 1;
     }
 
     private static class DoubleLinkedListIterator<T> implements Iterator<T> {

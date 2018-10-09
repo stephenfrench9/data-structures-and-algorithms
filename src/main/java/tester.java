@@ -18,10 +18,37 @@ public class tester {
         for(int i:a) {
             System.out.println(i);
         }
+        System.out.println("the size of the list is: " + a.size());
 
-        System.out.print(a.get(0));
-        System.out.print(a.get(3));
-        System.out.print(a.get(6));
+        System.out.println("now lets do some OPerations");
+        try {
+            a.insert(9, 100);
+            a.insert(9, 150);
+            a.insert(5, 111);
+            a.insert(0, 100);
+            a.insert(0, 100);
+        } catch(Exception e) {
+            System.out.println("Exception Thrown");
+        }
+        System.out.println("the size of the list is: " + a.size());
+
+
+//        try {
+//            a.set(-1, 100);
+//        } catch(Exception e) {
+//            System.out.println("Exception Thrown");
+//        }
+//        try {
+//            a.set(8, 100);
+//        } catch(Exception e) {
+//            System.out.println("Exception Thrown");
+//        }
+//        try {
+//            a.set(10, 100);
+//        } catch(Exception e) {
+//            System.out.println("Exception Thrown");
+//        }
+
 
         for(int i:a) {
             System.out.println(i);
