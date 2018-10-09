@@ -17,9 +17,11 @@ public class DoubleLinkedList<T> implements IList<T> {
         if(back==null) {
             back = new node<T>(item);
             front = back;
+            size = 1;
         } else {
             back.next = new node<T>(null, back, item);
             back = back.next;
+            size += 1;
         }
     }
 
@@ -44,7 +46,20 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public T get(int index) {
-        return null;
+
+        if(index >= 0 && index <= size - 1) {
+            node<T> p = front;
+
+            for(int k = 1; k <= index; k++) {
+                p = p.next;
+            }
+
+            return p.data;
+
+        } else {
+            return null;
+        }
+
     }
 
     @Override
