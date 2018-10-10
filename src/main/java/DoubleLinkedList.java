@@ -110,17 +110,47 @@ public class DoubleLinkedList<T> implements IList<T> {
         }
     }
 
-    private node<T> pointAt(int index) {
-        node<T> p = front;
-        for(int k = 1; k <= index; k++) {
-            p = p.next;
-        }
-        return p;
-    }
-
     @Override
     public T delete(int index) {
-        return null;
+        T r = null;//Is this ok? can a String be null?
+
+        if(valid(index)) {//There is an item in the list and we are pointing at it.
+            node<T> p = pointAt(index);
+            r = p.data;
+
+            node<T> previous = p.previous;
+            node<T> next = p.next;
+
+            if(front == back) {//one thing in the list
+                front = null;
+                back = null;
+                return r;
+            }
+
+            if(previous == null) {//front of a meaty list
+                front = next;
+                front.previous = null;
+                return r;
+            }
+
+            if(next == null) { //end of a meaty list
+                back = previous;
+                back.next = null;
+                return r;
+            }
+
+
+            previous.next = next;
+            next.previous = previous;
+            p.next = null;
+            p.previous = null;
+
+
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+
+        return r;
     }
 
     @Override
@@ -145,6 +175,14 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     private boolean valid(int index) {
         return index >= 0 && index <= size - 1;
+    }
+
+    private node<T> pointAt(int index) {
+        node<T> p = front;
+        for(int k = 1; k <= index; k++) {
+            p = p.next;
+        }
+        return p;
     }
 
     private static class DoubleLinkedListIterator<T> implements Iterator<T> {
