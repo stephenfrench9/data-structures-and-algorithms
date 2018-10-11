@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class DoubleLinkedList<T> implements IList<T> {
     node<T> front;
@@ -19,8 +20,9 @@ public class DoubleLinkedList<T> implements IList<T> {
             front = back;
             size = 1;
         } else {
-            back.next = new node<T>(null, back, item);
-            back = back.next;
+            node<T> a = new node<T>(null, back, item);
+            back.next = a;
+            back = a;
             size += 1;
         }
     }
@@ -28,11 +30,12 @@ public class DoubleLinkedList<T> implements IList<T> {
     @Override
     public T remove() {
         if(back == null) {
-            return null;
+            throw new EmptyContainerException();
         } else if (back == front) {
             T r = back.data;
             back = null;
             front = null;
+            size -= 1;
             return r;
         }
 
@@ -40,6 +43,7 @@ public class DoubleLinkedList<T> implements IList<T> {
         back = back.previous;
         back.next.previous = null;
         back.next = null;
+        size -= 1;
 
         return r;
     }
@@ -57,7 +61,7 @@ public class DoubleLinkedList<T> implements IList<T> {
             return p.data;
 
         } else {
-            return null;
+            throw new IndexOutOfBoundsException();
         }
 
     }
@@ -124,28 +128,28 @@ public class DoubleLinkedList<T> implements IList<T> {
             if(front == back) {//one thing in the list
                 front = null;
                 back = null;
+                size -= 1;
                 return r;
             }
 
             if(previous == null) {//front of a meaty list
                 front = next;
                 front.previous = null;
+                size -= 1;
                 return r;
             }
 
             if(next == null) { //end of a meaty list
                 back = previous;
                 back.next = null;
+                size -= 1;
                 return r;
             }
-
-
             previous.next = next;
             next.previous = previous;
             p.next = null;
             p.previous = null;
-
-
+            size -= 1;
         } else {
             throw new IndexOutOfBoundsException();
         }
@@ -155,7 +159,27 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public int indexOf(T item) {
-        return 0;
+        node<T> p = front;
+        int index = 0;
+
+        if(item != null) {
+            while (p != null) {
+                if (p.data.equals(item)) {
+                    return index;
+                }
+                index += 1;
+                p = p.next;
+            }
+        } else {
+            while (p != null) {
+                if (p.data == item) {
+                    return index;
+                }
+                index += 1;
+                p = p.next;
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -165,7 +189,12 @@ public class DoubleLinkedList<T> implements IList<T> {
 
     @Override
     public boolean contains(T other) {
-        return false;
+
+        if(indexOf(other)==-1) {
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -178,9 +207,20 @@ public class DoubleLinkedList<T> implements IList<T> {
     }
 
     private node<T> pointAt(int index) {
-        node<T> p = front;
-        for(int k = 1; k <= index; k++) {
-            p = p.next;
+        node<T> p;
+
+        if(index < size/2) {
+            p = front;
+            for (int k = 1; k <= index; k++) {
+                p = p.next;
+            }
+        } else {
+            p = back;
+            int currentIndex = size - 1;
+            while(currentIndex != index) {
+                p = p.previous;
+                currentIndex -= 1;
+            }
         }
         return p;
     }
@@ -204,7 +244,7 @@ public class DoubleLinkedList<T> implements IList<T> {
         @Override
         public T next() {
             if(current == null) {
-                return null;
+                throw new NoSuchElementException();
                 //is this ok? can you return null? what if T is an integer.
             } else {
                 T value = current.data;

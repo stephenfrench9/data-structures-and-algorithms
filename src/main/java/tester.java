@@ -1,19 +1,25 @@
 public class tester {
     public static void main(String[] args) {
         System.out.println("tester tester tester tester tester is running");
-        DoubleLinkedList<Integer> a = new DoubleLinkedList<Integer>();
+        DoubleLinkedList<String> a = new DoubleLinkedList<String>();
 
-        a.add(0);
-        a.add(1);
-        a.add(2);
-        a.add(3);
-        a.add(4);
-        a.add(5);
-        a.add(6);
-        a.add(7);
-        a.add(8);
+//        a.add(0);
+//        a.add(1);
+//        a.add(2);
+//        a.add(3);
+//        a.add(4);
+//        a.add(5);
+//        a.add(6);
+//        a.add(7);
+//        a.add(88);
 
-        for(int i:a) {
+        a.add("the");
+        a.add("day");
+        a.add("was");
+        a.add("young");
+
+
+        for(String i:a) {
             System.out.println(i);
         }
         System.out.println("the size of the list is: " + a.size());
@@ -23,7 +29,8 @@ public class tester {
         System.out.println("");
 
         try {
-            a.delete(9);
+            System.out.println("the index is: " + a.contains("thee"));
+
         } catch(Exception e) {
             System.out.println("Exception Thrown");
         }
@@ -32,7 +39,7 @@ public class tester {
         System.out.println("the size of the list is: " + a.size());
 
 
-        for(int i:a) {
+        for(String i:a) {
             System.out.println(i);
         }
 
