@@ -150,6 +150,7 @@ public class DoubleLinkedList<T> implements IList<T> {
             p.next = null;
             p.previous = null;
             size -= 1;
+
         } else {
             throw new IndexOutOfBoundsException();
         }
