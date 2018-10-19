@@ -31,32 +31,32 @@ public class ExpressionManipulators {
 
     public static double toDoubleHelper(IDictionary<String, AstNode> variables, AstNode node) {
         // There are three types of nodes, so we have three cases.
+        // TODO: your code here
         if (node.isNumber()) {
-            System.out.println("something nice is executing");
-            // TODO: your code here
+
             return node.getNumericValue();
 
         } else if (node.isVariable()) {
+            // TODO: your code here
             if (!variables.containsKey(node.getName())) {
                 // If the expression contains an undefined variable, we give up.
                 throw new EvaluationError("Undefined variable: " + node.getName());
             }
-            // TODO: your code here
-            throw new NotYetImplementedException();
+            AstNode n = variables.get(node.getName());
+            return n.getNumericValue();
         } else {
-            String name = node.getName();
-
             // TODO: your code here
-
+            String name = node.getName();
             if (name.equals("+")) {
+                // TODO: your code here
                 Double sum = 0.0;
                 for(AstNode i : node.getChildren()) {
                     Double d = toDoubleHelper(variables, i);
                     sum += d;
                 }
                 return sum;
-                // TODO: your code here
             } else if (name.equals("-")) {
+                // TODO: your code here
                 if(node.getChildren().size() != 2) {
                     throw new EvaluationError("Subtraction requires two arguments");
                 } else {
@@ -66,7 +66,6 @@ public class ExpressionManipulators {
                     Double result = first - second;
                     return result;
                 }
-                // TODO: your code here
             } else if (name.equals("*")) {
                 // TODO: your code here
                 throw new NotYetImplementedException();
