@@ -33,9 +33,7 @@ public class ExpressionManipulators {
         // There are three types of nodes, so we have three cases.
         // TODO: your code here
         if (node.isNumber()) {
-
             return node.getNumericValue();
-
         } else if (node.isVariable()) {
             // TODO: your code here
             if (!variables.containsKey(node.getName())) {
@@ -68,22 +66,61 @@ public class ExpressionManipulators {
                 }
             } else if (name.equals("*")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                Double product = 1.0;
+                for(AstNode i : node.getChildren()) {
+                    Double d = toDoubleHelper(variables, i);
+                    product *= d;
+                }
+                return product;
             } else if (name.equals("/")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                if(node.getChildren().size() != 2) {
+                    throw new EvaluationError("Division requires two arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double first = toDoubleHelper(variables, c.get(0));
+                    Double second = toDoubleHelper(variables, c.get(1));
+                    Double result = first/second;
+                    return result;
+                }
             } else if (name.equals("^")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                if(node.getChildren().size() != 2) {
+                    throw new EvaluationError("power requires two arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double first = toDoubleHelper(variables, c.get(0));
+                    Double second = toDoubleHelper(variables, c.get(1));
+                    Double result = Math.pow(first, second);
+                    return result;
+                }
             } else if (name.equals("negate")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                if(node.getChildren().size() != 1) {
+                    throw new EvaluationError("negation requires one arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double result = -1 *toDoubleHelper(variables, c.get(0));
+                    return result;
+                }
             } else if (name.equals("sin")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                if(node.getChildren().size() != 1) {
+                    throw new EvaluationError("sin requires one arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double result = Math.sin(toDoubleHelper(variables, c.get(0)));
+                    return result;
+                }
             } else if (name.equals("cos")) {
                 // TODO: your code here
-                throw new NotYetImplementedException();
+                if(node.getChildren().size() != 1) {
+                    throw new EvaluationError("sin requires one arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double result = Math.cos(toDoubleHelper(variables, c.get(0)));
+                    return result;
+                }
             } else {
                 throw new EvaluationError("Unknown operation: " + name);
             }
