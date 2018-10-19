@@ -51,7 +51,7 @@ public class AstNode {
         this(name, children, ExprType.OPERATION);
     }
 
-    private AstNode(String name, IList<AstNode> children, ExprType type) {
+    public AstNode(String name, IList<AstNode> children, ExprType type) {
         this.name = name;
         this.children = children;
         this.type = type;

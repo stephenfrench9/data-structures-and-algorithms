@@ -3,6 +3,7 @@ package calculator.ast;
 import calculator.interpreter.Environment;
 import calculator.errors.EvaluationError;
 import datastructures.interfaces.IDictionary;
+import datastructures.interfaces.IList;
 import misc.exceptions.NotYetImplementedException;
 
 /**
@@ -28,11 +29,13 @@ public class ExpressionManipulators {
         return new AstNode(toDoubleHelper(env.getVariables(), node));
     }
 
-    private static double toDoubleHelper(IDictionary<String, AstNode> variables, AstNode node) {
+    public static double toDoubleHelper(IDictionary<String, AstNode> variables, AstNode node) {
         // There are three types of nodes, so we have three cases.
         if (node.isNumber()) {
+            System.out.println("something nice is executing");
             // TODO: your code here
-            throw new NotYetImplementedException();
+            return node.getNumericValue();
+
         } else if (node.isVariable()) {
             if (!variables.containsKey(node.getName())) {
                 // If the expression contains an undefined variable, we give up.
@@ -46,11 +49,24 @@ public class ExpressionManipulators {
             // TODO: your code here
 
             if (name.equals("+")) {
+                Double sum = 0.0;
+                for(AstNode i : node.getChildren()) {
+                    Double d = toDoubleHelper(variables, i);
+                    sum += d;
+                }
+                return sum;
                 // TODO: your code here
-                throw new NotYetImplementedException();
             } else if (name.equals("-")) {
+                if(node.getChildren().size() != 2) {
+                    throw new EvaluationError("Subtraction requires two arguments");
+                } else {
+                    IList<AstNode> c = node.getChildren();
+                    Double first = toDoubleHelper(variables, c.get(0));
+                    Double second = toDoubleHelper(variables, c.get(1));
+                    Double result = first - second;
+                    return result;
+                }
                 // TODO: your code here
-                throw new NotYetImplementedException();
             } else if (name.equals("*")) {
                 // TODO: your code here
                 throw new NotYetImplementedException();
@@ -81,7 +97,7 @@ public class ExpressionManipulators {
         //         to your "toDouble" method
         // Hint 2: When you're implementing constant folding, you may want
         //         to call your "toDouble" method in some way
-
+        System.out.println("that as fun");
         // TODO: Your code here
         throw new NotYetImplementedException();
     }
