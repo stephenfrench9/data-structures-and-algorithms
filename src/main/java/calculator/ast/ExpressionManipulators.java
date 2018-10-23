@@ -133,9 +133,106 @@ public class ExpressionManipulators {
         //         to your "toDouble" method
         // Hint 2: When you're implementing constant folding, you may want
         //         to call your "toDouble" method in some way
+        IDictionary<String, AstNode> variables = env.getVariables();
+//        IDictionary<String, AstNode> variables = vari;
         System.out.println("that as fun");
-        // TODO: Your code here
-        throw new NotYetImplementedException();
+        if (node.isNumber()) {
+            return node;
+        } else if (node.isVariable()) {
+            // TODO: your code here
+            return node;
+        } else {
+            // TODO: your code here
+            String name = node.getName();
+            if (name.equals("+")) {
+                // TODO: your code here
+                try {
+                    Double sum = 0.0;
+                    for (AstNode i : node.getChildren()) {
+                        Double d = toDoubleHelper(variables, i);
+                        sum += d;
+                    }
+                    return new AstNode(sum);
+                } catch (EvaluationError e) {
+                    return node;
+                }
+            }
+        }
+//            } else if (name.equals("-")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 2) {
+//                    throw new EvaluationError("Subtraction requires two arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double first = toDoubleHelper(variables, c.get(0));
+//                    Double second = toDoubleHelper(variables, c.get(1));
+//                    Double result = first - second;
+//                    return result;
+//                }
+//            } else if (name.equals("*")) {
+//                // TODO: your code here
+//                Double product = 1.0;
+//                for(AstNode i : node.getChildren()) {
+//                    Double d = toDoubleHelper(variables, i);
+//                    product *= d;
+//                }
+//                return product;
+//            } else if (name.equals("/")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 2) {
+//                    throw new EvaluationError("Division requires two arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double first = toDoubleHelper(variables, c.get(0));
+//                    Double second = toDoubleHelper(variables, c.get(1));
+//                    Double result = first/second;
+//                    return result;
+//                }
+//            } else if (name.equals("^")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 2) {
+//                    throw new EvaluationError("power requires two arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double first = toDoubleHelper(variables, c.get(0));
+//                    Double second = toDoubleHelper(variables, c.get(1));
+//                    Double result = Math.pow(first, second);
+//                    return result;
+//                }
+//            } else if (name.equals("negate")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 1) {
+//                    throw new EvaluationError("negation requires one arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double result = -1 *toDoubleHelper(variables, c.get(0));
+//                    return result;
+//                }
+//            } else if (name.equals("sin")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 1) {
+//                    throw new EvaluationError("sin requires one arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double result = Math.sin(toDoubleHelper(variables, c.get(0)));
+//                    return result;
+//                }
+//            } else if (name.equals("cos")) {
+//                // TODO: your code here
+//                if(node.getChildren().size() != 1) {
+//                    throw new EvaluationError("sin requires one arguments");
+//                } else {
+//                    IList<AstNode> c = node.getChildren();
+//                    Double result = Math.cos(toDoubleHelper(variables, c.get(0)));
+//                    return result;
+//                }
+//            } else {
+//                throw new EvaluationError("Unknown operation: " + name);
+//            }
+//        }
+//        // TODO: Your code here
+//        throw new NotYetImplementedException();
+        return node;
     }
 
     /**
