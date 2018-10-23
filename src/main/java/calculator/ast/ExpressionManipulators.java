@@ -128,42 +128,54 @@ public class ExpressionManipulators {
     }
 
     public static AstNode simplify(Environment env, AstNode node) {
-//        String name = node.getName();
-//        System.out.println("The node is called " + name);
-
-        System.out.println(node.isOperation());
-
-
         // Try writing this one on your own!
         // Hint 1: Your code will likely be structured roughly similarly
         //         to your "toDouble" method
         // Hint 2: When you're implementing constant folding, you may want
         //         to call your "toDouble" method in some way
         IDictionary<String, AstNode> variables = env.getVariables();
-//        IDictionary<String, AstNode> variables = vari;
         if (node.isNumber()) {
-            System.out.println("the node was determined to be a numner");
-
+            return node;
         } else if (node.isVariable()) {
-            System.out.println("the node was determined to be a variable");
-            // TODO: your codde here
+            return node;
+        }
 
-        } else {
-            // TODO: your code here
+        if(node.isOperation()) {
+// call simplify on the children.
             String name = node.getName();
-            System.out.println("The node is called " + name);
             if(name.equals("simplify")) {
                 return simplify(env, node.getChildren().get(0));
-            } else if (name.equals("+")) {
-                // TODO: your code here
+            }
+
+            for(AstNode k:node.getChildren()) {
+                System.out.println("we are simplifying achild");
+                simplify(env, k);
+            }
+
+
+            if (name.equals("+")) {
+                node = simplify(env, node);
                 try {
                     Double sum = 0.0;
                     for (AstNode i : node.getChildren()) {
                         Double d = toDoubleHelper(variables, i);
                         sum += d;
                     }
-                    System.out.println("printing something here");
                     return new AstNode(sum);
+                } catch (EvaluationError e) {
+                    return node;
+                }
+            } else if (name.equals("-")) {
+                try {
+                    if(node.getChildren().size() != 2) {
+                        throw new EvaluationError("Subtraction requires two arguments");
+                    } else {
+                        IList<AstNode> c = node.getChildren();
+                        Double first = toDoubleHelper(variables, c.get(0));
+                        Double second = toDoubleHelper(variables, c.get(1));
+                        Double result = first - second;
+                        return new AstNode(result);
+                    }
                 } catch (EvaluationError e) {
                     return node;
                 }
@@ -174,15 +186,6 @@ public class ExpressionManipulators {
     }
 //            } else if (name.equals("-")) {
 //                // TODO: your code here
-//                if(node.getChildren().size() != 2) {
-//                    throw new EvaluationError("Subtraction requires two arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double first = toDoubleHelper(variables, c.get(0));
-//                    Double second = toDoubleHelper(variables, c.get(1));
-//                    Double result = first - second;
-//                    return result;
-//                }
 //            } else if (name.equals("*")) {
 //                // TODO: your code here
 //                Double product = 1.0;
