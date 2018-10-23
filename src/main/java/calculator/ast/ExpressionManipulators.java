@@ -128,6 +128,12 @@ public class ExpressionManipulators {
     }
 
     public static AstNode simplify(Environment env, AstNode node) {
+//        String name = node.getName();
+//        System.out.println("The node is called " + name);
+
+        System.out.println(node.isOperation());
+
+
         // Try writing this one on your own!
         // Hint 1: Your code will likely be structured roughly similarly
         //         to your "toDouble" method
@@ -135,16 +141,20 @@ public class ExpressionManipulators {
         //         to call your "toDouble" method in some way
         IDictionary<String, AstNode> variables = env.getVariables();
 //        IDictionary<String, AstNode> variables = vari;
-        System.out.println("that as fun");
         if (node.isNumber()) {
-            return node;
+            System.out.println("the node was determined to be a numner");
+
         } else if (node.isVariable()) {
-            // TODO: your code here
-            return node;
+            System.out.println("the node was determined to be a variable");
+            // TODO: your codde here
+
         } else {
             // TODO: your code here
             String name = node.getName();
-            if (name.equals("+")) {
+            System.out.println("The node is called " + name);
+            if(name.equals("simplify")) {
+                return simplify(env, node.getChildren().get(0));
+            } else if (name.equals("+")) {
                 // TODO: your code here
                 try {
                     Double sum = 0.0;
@@ -152,12 +162,16 @@ public class ExpressionManipulators {
                         Double d = toDoubleHelper(variables, i);
                         sum += d;
                     }
+                    System.out.println("printing something here");
                     return new AstNode(sum);
                 } catch (EvaluationError e) {
                     return node;
                 }
             }
         }
+        System.out.println("simplify is completed");
+        return node;
+    }
 //            } else if (name.equals("-")) {
 //                // TODO: your code here
 //                if(node.getChildren().size() != 2) {
@@ -232,8 +246,8 @@ public class ExpressionManipulators {
 //        }
 //        // TODO: Your code here
 //        throw new NotYetImplementedException();
-        return node;
-    }
+
+//    }
 
     /**
      * Expected signature of plot:
