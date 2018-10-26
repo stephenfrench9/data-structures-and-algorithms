@@ -2,6 +2,7 @@ package calculator.ast;
 
 import calculator.interpreter.Environment;
 import calculator.errors.EvaluationError;
+import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
 import misc.exceptions.NotYetImplementedException;
@@ -147,14 +148,14 @@ public class ExpressionManipulators {
                 return simplify(env, node.getChildren().get(0));
             }
 
-            for(AstNode k:node.getChildren()) {
-                System.out.println("we are simplifying achild");
-                simplify(env, k);
-            }
+//            for(AstNode k:node.getChildren()) {
+//                System.out.println("we are simplifying achild");
+//                simplify(env, k);
+//            }
 
 
             if (name.equals("+")) {
-                node = simplify(env, node);
+//                node = simplify(env, node);
                 try {
                     Double sum = 0.0;
                     for (AstNode i : node.getChildren()) {
@@ -163,7 +164,14 @@ public class ExpressionManipulators {
                     }
                     return new AstNode(sum);
                 } catch (EvaluationError e) {
-                    return node;
+                    IList<AstNode> l = node.getChildren();
+                    IList<AstNode> ln = new DoubleLinkedList<AstNode>();
+                    String new_name = node.getName();
+                    for (AstNode i : l) {
+
+                        ln.add(simplify(env,i));
+                    }
+                    return new AstNode(new_name, ln);
                 }
             } else if (name.equals("-")) {
                 try {

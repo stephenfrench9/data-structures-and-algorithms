@@ -35,9 +35,9 @@ public class tester {
         top.add(q);
         AstNode t = new AstNode("*", top);
 
-        Environment env = new Environment(null, null, null, null, null);
-        AstNode s = ExpressionManipulators.simplify(env, e);
-        System.out.println("the value of the node e is: " + ExpressionManipulators.toDoubleHelper(d, s));
+//        Environment env = new Environment(null, null, null, null, null);
+//        AstNode s = ExpressionManipulators.simplify(env, e);
+        System.out.println("the value of the node e is: " + ExpressionManipulators.toDoubleHelper(d, e));
 //        (1+2)*q
     }
 }
