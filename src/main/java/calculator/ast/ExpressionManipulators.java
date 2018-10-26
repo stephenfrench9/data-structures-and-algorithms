@@ -146,22 +146,16 @@ public class ExpressionManipulators {
             if(name.equals("simplify")) {
                 return simplify(env, node.getChildren().get(0));
             }
-
-            
-            if (name.equals("+")) {
-                try {
+            try {
+                if (name.equals("+")) {
                     Double sum = 0.0;
                     for (AstNode i : node.getChildren()) {
                         Double d = toDoubleHelper(variables, i);
                         sum += d;
                     }
                     return new AstNode(sum);
-                } catch (EvaluationError e) {
-                    return nodeWithProperChildren(node, env);
-                }
-            } else if (name.equals("-")) {
-                try {
-                    if(node.getChildren().size() != 2) {
+                } else if (name.equals("-")) {
+                    if (node.getChildren().size() != 2) {
                         throw new EvaluationError("Subtraction requires two arguments");
                     } else {
                         IList<AstNode> c = node.getChildren();
@@ -170,9 +164,9 @@ public class ExpressionManipulators {
                         Double result = first - second;
                         return new AstNode(result);
                     }
-                } catch (EvaluationError e) {
-                    return nodeWithProperChildren(node, env);
                 }
+            } catch (EvaluationError e) {
+                return nodeWithProperChildren(node, env);
             }
         }
         System.out.println("simplify is completed");
