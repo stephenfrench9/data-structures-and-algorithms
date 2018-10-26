@@ -142,20 +142,13 @@ public class ExpressionManipulators {
         }
 
         if(node.isOperation()) {
-// call simplify on the children.
             String name = node.getName();
             if(name.equals("simplify")) {
                 return simplify(env, node.getChildren().get(0));
             }
 
-//            for(AstNode k:node.getChildren()) {
-//                System.out.println("we are simplifying achild");
-//                simplify(env, k);
-//            }
-
-
+            
             if (name.equals("+")) {
-//                node = simplify(env, node);
                 try {
                     Double sum = 0.0;
                     for (AstNode i : node.getChildren()) {
@@ -164,14 +157,7 @@ public class ExpressionManipulators {
                     }
                     return new AstNode(sum);
                 } catch (EvaluationError e) {
-                    IList<AstNode> l = node.getChildren();
-                    IList<AstNode> ln = new DoubleLinkedList<AstNode>();
-                    String new_name = node.getName();
-                    for (AstNode i : l) {
-
-                        ln.add(simplify(env,i));
-                    }
-                    return new AstNode(new_name, ln);
+                    return nodeWithProperChildren(node, env);
                 }
             } else if (name.equals("-")) {
                 try {
@@ -185,12 +171,22 @@ public class ExpressionManipulators {
                         return new AstNode(result);
                     }
                 } catch (EvaluationError e) {
-                    return node;
+                    return nodeWithProperChildren(node, env);
                 }
             }
         }
         System.out.println("simplify is completed");
         return node;
+    }
+
+    private static AstNode nodeWithProperChildren(AstNode node, Environment env) {
+        IList<AstNode> l = node.getChildren();
+        IList<AstNode> ln = new DoubleLinkedList<AstNode>();
+        String new_name = node.getName();
+        for (AstNode i : l) {
+            ln.add(simplify(env,i));
+        }
+        return new AstNode(new_name, ln);
     }
 //            } else if (name.equals("-")) {
 //                // TODO: your code here
