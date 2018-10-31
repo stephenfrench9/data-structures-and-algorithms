@@ -140,31 +140,14 @@ public class ExpressionManipulators {
         } else if (node.isVariable()) {
             return node;
         }
-
         if(node.isOperation()) {
             String name = node.getName();
             if(name.equals("simplify")) {
                 return simplify(env, node.getChildren().get(0));
             }
             try {
-                if (name.equals("+")) {
-                    Double sum = 0.0;
-                    for (AstNode i : node.getChildren()) {
-                        Double d = toDoubleHelper(variables, i);
-                        sum += d;
-                    }
-                    return new AstNode(sum);
-                } else if (name.equals("-")) {
-                    if (node.getChildren().size() != 2) {
-                        throw new EvaluationError("Subtraction requires two arguments");
-                    } else {
-                        IList<AstNode> c = node.getChildren();
-                        Double first = toDoubleHelper(variables, c.get(0));
-                        Double second = toDoubleHelper(variables, c.get(1));
-                        Double result = first - second;
-                        return new AstNode(result);
-                    }
-                }
+                double result = toDoubleHelper(env.getVariables(), node);
+                return new AstNode(result);
             } catch (EvaluationError e) {
                 return nodeWithProperChildren(node, env);
             }
