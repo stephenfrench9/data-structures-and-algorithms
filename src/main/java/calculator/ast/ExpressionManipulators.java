@@ -1,11 +1,14 @@
 package calculator.ast;
 
+import calculator.gui.ImageDrawer;
 import calculator.interpreter.Environment;
 import calculator.errors.EvaluationError;
 import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
 import misc.exceptions.NotYetImplementedException;
+
+import java.awt.*;
 
 /**
  * All of the static methods in this class are given the exact same parameters for
@@ -32,11 +35,9 @@ public class ExpressionManipulators {
 
     public static double toDoubleHelper(IDictionary<String, AstNode> variables, AstNode node) {
         // There are three types of nodes, so we have three cases.
-        // TODO: your code here
         if (node.isNumber()) {
             return node.getNumericValue();
         } else if (node.isVariable()) {
-            // TODO: your code here
             if (!variables.containsKey(node.getName())) {
                 // If the expression contains an undefined variable, we give up.
                 throw new EvaluationError("Undefined variable: " + node.getName());
@@ -44,10 +45,8 @@ public class ExpressionManipulators {
             AstNode n = variables.get(node.getName());
             return n.getNumericValue();
         } else {
-            // TODO: your code here
             String name = node.getName();
             if (name.equals("+")) {
-                // TODO: your code here
                 Double sum = 0.0;
                 for(AstNode i : node.getChildren()) {
                     Double d = toDoubleHelper(variables, i);
@@ -55,7 +54,6 @@ public class ExpressionManipulators {
                 }
                 return sum;
             } else if (name.equals("-")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 2) {
                     throw new EvaluationError("Subtraction requires two arguments");
                 } else {
@@ -66,7 +64,6 @@ public class ExpressionManipulators {
                     return result;
                 }
             } else if (name.equals("*")) {
-                // TODO: your code here
                 Double product = 1.0;
                 for(AstNode i : node.getChildren()) {
                     Double d = toDoubleHelper(variables, i);
@@ -74,7 +71,6 @@ public class ExpressionManipulators {
                 }
                 return product;
             } else if (name.equals("/")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 2) {
                     throw new EvaluationError("Division requires two arguments");
                 } else {
@@ -85,7 +81,6 @@ public class ExpressionManipulators {
                     return result;
                 }
             } else if (name.equals("^")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 2) {
                     throw new EvaluationError("power requires two arguments");
                 } else {
@@ -96,7 +91,6 @@ public class ExpressionManipulators {
                     return result;
                 }
             } else if (name.equals("negate")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 1) {
                     throw new EvaluationError("negation requires one arguments");
                 } else {
@@ -105,7 +99,6 @@ public class ExpressionManipulators {
                     return result;
                 }
             } else if (name.equals("sin")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 1) {
                     throw new EvaluationError("sin requires one arguments");
                 } else {
@@ -114,7 +107,6 @@ public class ExpressionManipulators {
                     return result;
                 }
             } else if (name.equals("cos")) {
-                // TODO: your code here
                 if(node.getChildren().size() != 1) {
                     throw new EvaluationError("sin requires one arguments");
                 } else {
@@ -165,73 +157,6 @@ public class ExpressionManipulators {
         }
         return new AstNode(new_name, ln);
     }
-//            } else if (name.equals("-")) {
-//                // TODO: your code here
-//            } else if (name.equals("*")) {
-//                // TODO: your code here
-//                Double product = 1.0;
-//                for(AstNode i : node.getChildren()) {
-//                    Double d = toDoubleHelper(variables, i);
-//                    product *= d;
-//                }
-//                return product;
-//            } else if (name.equals("/")) {
-//                // TODO: your code here
-//                if(node.getChildren().size() != 2) {
-//                    throw new EvaluationError("Division requires two arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double first = toDoubleHelper(variables, c.get(0));
-//                    Double second = toDoubleHelper(variables, c.get(1));
-//                    Double result = first/second;
-//                    return result;
-//                }
-//            } else if (name.equals("^")) {
-//                // TODO: your code here
-//                if(node.getChildren().size() != 2) {
-//                    throw new EvaluationError("power requires two arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double first = toDoubleHelper(variables, c.get(0));
-//                    Double second = toDoubleHelper(variables, c.get(1));
-//                    Double result = Math.pow(first, second);
-//                    return result;
-//                }
-//            } else if (name.equals("negate")) {
-//                // TODO: your code here
-//                if(node.getChildren().size() != 1) {
-//                    throw new EvaluationError("negation requires one arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double result = -1 *toDoubleHelper(variables, c.get(0));
-//                    return result;
-//                }
-//            } else if (name.equals("sin")) {
-//                // TODO: your code here
-//                if(node.getChildren().size() != 1) {
-//                    throw new EvaluationError("sin requires one arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double result = Math.sin(toDoubleHelper(variables, c.get(0)));
-//                    return result;
-//                }
-//            } else if (name.equals("cos")) {
-//                // TODO: your code here
-//                if(node.getChildren().size() != 1) {
-//                    throw new EvaluationError("sin requires one arguments");
-//                } else {
-//                    IList<AstNode> c = node.getChildren();
-//                    Double result = Math.cos(toDoubleHelper(variables, c.get(0)));
-//                    return result;
-//                }
-//            } else {
-//                throw new EvaluationError("Unknown operation: " + name);
-//            }
-//        }
-//        // TODO: Your code here
-//        throw new NotYetImplementedException();
-
-//    }
 
     /**
      * Expected signature of plot:
@@ -260,13 +185,47 @@ public class ExpressionManipulators {
      *
      * ---
      *
-     * @throws EvaluationError  if any of the expressions contains an undefined variable.
+     * @throws EvaluationError  if any of the expressions contains an undefined variable. //they will contain an undefined variable
      * @throws EvaluationError  if varMin > varMax
      * @throws EvaluationError  if 'var' was already defined
      * @throws EvaluationError  if 'step' is zero or negative
      */
     public static AstNode plot(Environment env, AstNode node) {
-        throw new NotYetImplementedException();
+
+
+//        AstNode operation = ; // an expression with a variable in it
+//        AstNode var = ; // the variable
+//        AstNode varMin = ;
+//        AstNode varMax = ;
+//        AstNode step = ; // something that toDoubleHelper evaluates to a number // how is this not a
+
+        //wow I am really confused about all of this. Why is it this way? I imported the class. Now I should
+        //be able to say class.methodIwant.
+        IList<AstNode> children = node.getChildren();
+
+        AstNode expression = children.get(0);
+        AstNode variable = children.get(1);
+        AstNode minN = children.get(2);
+        AstNode maxN = children.get(3);
+        AstNode stepsN = children.get(4);
+
+        Double min = minN.getNumericValue();
+        Double max = maxN.getNumericValue();
+        Double steps = stepsN.getNumericValue();
+        Double delta = (max-min)/(steps-1);
+
+        IList<Double> x = new DoubleLinkedList<Double>();
+        IList<Double> y = new DoubleLinkedList<Double>();
+        for(int i =0; i < steps; i++) {
+            x.add(min+i*delta);
+            env.getVariables().put(variable.getName(), new AstNode(4));
+            y.add(toDoubleHelper(env.getVariables(), expression));
+        }
+
+        System.out.println("we can make it to the console");
+
+        ImageDrawer i = env.getImageDrawer();
+        i.drawScatterPlot("Y vs X", "x", "y",x,y);
 
         // Note: every single function we add MUST return an
         // AST node that your "simplify" function is capable of handling.
@@ -277,6 +236,6 @@ public class ExpressionManipulators {
         //
         // When working on this method, you should uncomment the following line:
         //
-        // return new AstNode(1);
+         return new AstNode(1);
     }
 }
