@@ -203,29 +203,33 @@ public class ExpressionManipulators {
         //be able to say class.methodIwant.
         IList<AstNode> children = node.getChildren();
 
-        AstNode expression = children.get(0);
-        AstNode variable = children.get(1);
-        AstNode minN = children.get(2);
-        AstNode maxN = children.get(3);
-        AstNode stepsN = children.get(4);
+        try {
+            AstNode expression = children.get(0);
+            AstNode variable = children.get(1);
+            AstNode minN = children.get(2);
+            AstNode maxN = children.get(3);
+            AstNode stepsN = children.get(4);
 
-        Double min = minN.getNumericValue();
-        Double max = maxN.getNumericValue();
-        Double steps = stepsN.getNumericValue();
-        Double delta = (max-min)/(steps-1);
+            Double min = minN.getNumericValue();
+            Double max = maxN.getNumericValue();
+            Double steps = stepsN.getNumericValue();
+            Double delta = (max-min)/(steps-1);
 
-        IList<Double> x = new DoubleLinkedList<Double>();
-        IList<Double> y = new DoubleLinkedList<Double>();
-        for(int i =0; i < steps; i++) {
-            x.add(min+i*delta);
-            env.getVariables().put(variable.getName(), new AstNode(4));
-            y.add(toDoubleHelper(env.getVariables(), expression));
+            IList<Double> x = new DoubleLinkedList<Double>();
+            IList<Double> y = new DoubleLinkedList<Double>();
+
+            for(int j =0; j < steps; j++) {
+                Double x_coordinate = min+j*delta;
+                x.add(x_coordinate);
+                env.getVariables().put(variable.getName(), new AstNode(x_coordinate));
+                y.add(toDoubleHelper(env.getVariables(), expression));
+            }
+            ImageDrawer i = env.getImageDrawer();
+            i.drawScatterPlot("Y vs X", "x", "y",x,y);
+        } catch(IndexOutOfBoundsException e) {
+            return new AstNode(0);
         }
 
-        System.out.println("we can make it to the console");
-
-        ImageDrawer i = env.getImageDrawer();
-        i.drawScatterPlot("Y vs X", "x", "y",x,y);
 
         // Note: every single function we add MUST return an
         // AST node that your "simplify" function is capable of handling.
