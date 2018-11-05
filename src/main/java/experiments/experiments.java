@@ -12,9 +12,9 @@ public class experiments {
 
     public static void main(String[] args) {
         DoubleLinkedList<Integer> l = new DoubleLinkedList<Integer>();
-        
 
-        File f = new File("/Users/stephenfrench/experiments/input/getMiddle_2.csv");
+
+        File f = new File("analysis/input/getMiddle_2.csv");
         try {
             FileWriter fw = new FileWriter(f);
             CSVWriter writer = new CSVWriter(fw);
