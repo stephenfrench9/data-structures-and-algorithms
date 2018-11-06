@@ -15,11 +15,14 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     // You may not change or rename this field: we will be inspecting
     // it using our private tests.
     private IDictionary<K, V>[] chains;
-
+    private int tablesize;
+    private int size;
     // You're encouraged to add extra fields (and helper methods) though!
 
     public ChainedHashDictionary() {
-        throw new NotYetImplementedException();
+        chains = makeArrayOfChains(10);
+        tablesize = 10;
+        size = 0;
     }
 
     /**
@@ -38,33 +41,64 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public V get(K key) {
-        throw new NotYetImplementedException();
+        int hashkey = key.hashCode();
+        int index = hashkey%tablesize;
+        if(chains[index]==null) {
+            throw new NoSuchKeyException();
+        }
+
+        return chains[index].get(key);
     }
 
     @Override
     public void put(K key, V value) {
-        throw new NotYetImplementedException();
+        int hashkey = key.hashCode();
+        int index = hashkey%tablesize;
+        if(chains[index]==null) {
+            chains[index]=new ArrayDictionary<>();
+        }
+        chains[index].put(key, value);
+        size+=1;
     }
 
     @Override
     public V remove(K key) {
-        throw new NotYetImplementedException();
+        int hashedKey = key.hashCode();
+        int index = hashedKey%tablesize;
+
+        if(chains[index]==null) {
+            throw new NoSuchKeyException();
+        }
+
+        try {
+            V removed = chains[index].remove(key);
+            size -= 1;
+            return removed;
+        } catch (NoSuchKeyException nk) {
+            throw new NoSuchKeyException();
+        }
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new NotYetImplementedException();
+        int hashedKey = key.hashCode();
+        int index = hashedKey%tablesize;
+        if(chains[index]==null) {
+            return false;
+        }
+
+        return chains[index].containsKey(key);
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return size;
     }
 
     @Override
     public Iterator<KVPair<K, V>> iterator() {
         // Note: you do not need to change this method
-        return new ChainedIterator<>(this.chains);
+        return new ChainedIterator<>(this.chains, this.size);
     }
 
     /**
@@ -104,20 +138,63 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      *    instance inside your 'chains' array, however.
      */
     private static class ChainedIterator<K, V> implements Iterator<KVPair<K, V>> {
-        private IDictionary<K, V>[] chains;
 
-        public ChainedIterator(IDictionary<K, V>[] chains) {
+        private IDictionary<K, V>[] chains;
+        private int nextChain; //this is a chain, it has next (-1 when there is not a next)
+        private Iterator<KVPair<K, V>> nextIterator; //this is a iterator, it has next. (null when there is not a next)
+        private int size;
+
+        public ChainedIterator(IDictionary<K, V>[] chains, int size) {
             this.chains = chains;
+            this.size=size;
+            nextChain=0;
+            updateNexts();
         }
 
         @Override
         public boolean hasNext() {
-            throw new NotYetImplementedException();
-        }
+            if(nextChain>=size) {
+                return false;
+            }
+            return nextIterator.hasNext();
+         }
 
         @Override
         public KVPair<K, V> next() {
-            throw new NotYetImplementedException();
+
+            //There is not a next.
+            if(nextChain>size) {
+                throw new NoSuchElementException();
+            }
+
+            //your iterator has it.
+            KVPair<K, V> next = nextIterator.next();
+
+            //update nextChain and NextIterator if you need to.
+            if(!nextIterator.hasNext()) {
+                nextChain += 1; //guess
+                updateNexts(); //made lots of sense in this setting. Tried to refactor, and it is confusing me, though I think its ok.
+                return next;
+            }
+            return next;
+            //update your iterator(try to find next.)
+            //move onto next candidate chain.
+            //look at the next chain
+            //is it null? look at the next chain.
+            //repeat until I have a non-null chain -or- I have checked all
+        }
+
+        private void updateNexts() {
+            while(chains[nextChain]==null && nextChain<size) {//if the chain is empty, make sure its null
+                nextChain+=1;
+            }
+            if(chains[nextChain]!=null) {
+                nextIterator = chains[nextChain].iterator();
+                //confirm that this iterator has a next, assign next, handle the empty chain
+            } else if (nextChain<size) {
+                nextIterator = null;
+                nextChain = -1;
+            }
         }
     }
 }

@@ -137,7 +137,8 @@ public class ArrayDictionary<K, V> implements IDictionary<K, V> {
             @Override
             public KVPair<K, V> next() {
                 if(hasNext()) {
-                    return new KVPair<>(pairs[current].key, pairs[current].value);
+                    current += 1;
+                    return new KVPair<>(pairs[current-1].key, pairs[current-1].value);
                 } else {
                     return null;
                 }
