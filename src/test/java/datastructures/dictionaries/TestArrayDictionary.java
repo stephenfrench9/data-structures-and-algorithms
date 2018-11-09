@@ -28,6 +28,7 @@ public class TestArrayDictionary extends TestDictionary {
 
     @Test
     public void testIterator() {
+        System.out.println("runnin from testDictionary class");
         IDictionary<String, Integer> d = makeBasicList();
         assertEquals(3, d.get("three"));
 
@@ -43,6 +44,5 @@ public class TestArrayDictionary extends TestDictionary {
 
         System.out.println(d.get("three"));
     }
-
 
 }

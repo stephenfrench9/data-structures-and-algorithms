@@ -19,8 +19,21 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     private int size;
     // You're encouraged to add extra fields (and helper methods) though!
 
+    public void resize() {
+        Iterator<KVPair<K, V>> it = iterator();
+        IDictionary<K, V>[] oldChains = chains;
+        tablesize = 4*chains.length;
+        chains = makeArrayOfChains(tablesize);
+        size = 0;
+        while(it.hasNext()) {
+            KVPair<K, V> p = it.next();
+            put(p.getKey(), p.getValue());
+        }
+    }
+
+
     public ChainedHashDictionary() {
-        chains = makeArrayOfChains(10);
+        chains = makeArrayOfChains(100);
         tablesize = 10;
         size = 0;
     }
@@ -42,7 +55,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     @Override
     public V get(K key) {
         int hashkey = key.hashCode();
-        int index = hashkey%tablesize;
+        int index = Math.abs(hashkey%tablesize);
         if(chains[index]==null) {
             throw new NoSuchKeyException();
         }
@@ -52,19 +65,28 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public void put(K key, V value) {
-        int hashkey = key.hashCode();
-        int index = hashkey%tablesize;
-        if(chains[index]==null) {
-            chains[index]=new ArrayDictionary<>();
+        if (size > tablesize * 10) {
+            resize();
         }
+        try {
+            get(key);
+        } catch(NoSuchKeyException e) {
+            size += 1;
+        }
+        int hashkey = key.hashCode();
+        int index = Math.abs(hashkey % tablesize);
+        if (chains[index] == null) {
+            chains[index] = new ArrayDictionary<>();
+        }
+
         chains[index].put(key, value);
-        size+=1;
+
     }
 
     @Override
     public V remove(K key) {
         int hashedKey = key.hashCode();
-        int index = hashedKey%tablesize;
+        int index = Math.abs(hashedKey%tablesize);
 
         if(chains[index]==null) {
             throw new NoSuchKeyException();
@@ -82,7 +104,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
     @Override
     public boolean containsKey(K key) {
         int hashedKey = key.hashCode();
-        int index = hashedKey%tablesize;
+        int index = Math.abs(hashedKey%tablesize);
         if(chains[index]==null) {
             return false;
         }
