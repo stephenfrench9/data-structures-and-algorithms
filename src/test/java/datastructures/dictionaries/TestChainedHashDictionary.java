@@ -3,10 +3,13 @@ package datastructures.dictionaries;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
+import datastructures.concrete.KVPair;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import misc.exceptions.NoSuchKeyException;
 import org.junit.Test;
+
+import java.util.Iterator;
 
 public class TestChainedHashDictionary extends TestDictionary {
     protected <K, V> IDictionary<K, V> newDictionary() {
@@ -50,15 +53,35 @@ public class TestChainedHashDictionary extends TestDictionary {
     @Test
     public void testContainsKey() {
         IDictionary<String, String> d = makeBasicDictionary();
+        assertEquals(d.containsKey("keyA"), true); assertEquals(d.containsKey("keyB"), true);
+        assertEquals(d.containsKey("keyC"), true); assertEquals(d.containsKey("valA"), false);
+        assertEquals(d.containsKey("keyD"), false); assertEquals(d.containsKey("keyAA"), false);
+    }
 
-        assertEquals(d.containsKey("keyA"), true);
-        assertEquals(d.containsKey("keyB"), true);
-        assertEquals(d.containsKey("keyC"), true);
-        assertEquals(d.containsKey("valA"), false);
-        assertEquals(d.containsKey("keyD"), false);
-        assertEquals(d.containsKey("keyAA"), false);
+    @Test
+    public void testIteratorInitializationHasNext() {
+        IDictionary<String, String> d = makeBasicDictionary();
+        assertEquals(true, d.iterator().hasNext());
+        d.remove("keyA"); assertEquals(true, d.iterator().hasNext());
+        d.remove("keyB"); assertEquals(true, d.iterator().hasNext());
+        d.remove("keyC"); assertEquals(false, d.iterator().hasNext());
+    }
+
+    @Test
+    public void testIteratorStuff() {
+        IDictionary<String, String> d = makeBasicDictionary();
+        d.remove("keyA"); assertEquals(true, d.iterator().hasNext());
+        d.remove("keyB"); assertEquals(true, d.iterator().hasNext());
+        d.remove("keyC"); assertEquals(false, d.iterator().hasNext());
+        assertEquals(null, d.iterator().next());
 
 
+        d = makeBasicDictionary();
+        Iterator<KVPair<String, String>> it = d.iterator();
+        assertEquals("keyA", it.next().getKey());
+        assertEquals("keyB", it.next().getKey());
+        assertEquals("keyC", it.next().getKey());
+        assertEquals(null, it.next());
     }
 
 //    @Test(timeout=SECOND)

@@ -138,7 +138,6 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
      *    instance inside your 'chains' array, however.
      */
     private static class ChainedIterator<K, V> implements Iterator<KVPair<K, V>> {
-
         private IDictionary<K, V>[] chains;
         private int nextChain; //this is a chain, it has next (-1 when there is not a next)
         private Iterator<KVPair<K, V>> nextIterator; //this is a iterator, it has next. (null when there is not a next)
@@ -147,13 +146,32 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         public ChainedIterator(IDictionary<K, V>[] chains, int size) {
             this.chains = chains;
             this.size=size;
-            nextChain=0;
-            updateNexts();
+            nextChain=0; //this is the chain that has 'next' in it
+            nextIterator = null; //this is the iterator that has 'next'
+            //find the first next.
+            boolean go = true;
+            while(go) {
+                while (nextChain < chains.length && chains[nextChain] == null) {
+                    nextChain += 1;
+                }
+                go = false;
+                if(nextChain < chains.length &&!chains[nextChain].iterator().hasNext()) {
+                    nextChain += 1;
+                    go = true;
+                }
+            }
+            //now you have a chain or have determined there is no next.
+            if(nextChain<chains.length) {
+                nextIterator = chains[nextChain].iterator();
+            } else {
+                nextChain = -1;
+                nextIterator = null;
+            }
         }
 
         @Override
         public boolean hasNext() {
-            if(nextChain>=size) {
+            if(nextChain==-1) {
                 return false;
             }
             return nextIterator.hasNext();
@@ -162,36 +180,35 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         @Override
         public KVPair<K, V> next() {
 
-            //There is not a next.
-            if(nextChain>size) {
-                throw new NoSuchElementException();
+            KVPair<K, V> next = null;
+            if(nextChain != -1) {
+                next = nextIterator.next();
+                if(!nextIterator.hasNext()) {
+                    updateNexts();
+                }
             }
 
-            //your iterator has it.
-            KVPair<K, V> next = nextIterator.next();
-
-            //update nextChain and NextIterator if you need to.
-            if(!nextIterator.hasNext()) {
-                nextChain += 1; //guess
-                updateNexts(); //made lots of sense in this setting. Tried to refactor, and it is confusing me, though I think its ok.
-                return next;
-            }
             return next;
-            //update your iterator(try to find next.)
-            //move onto next candidate chain.
-            //look at the next chain
-            //is it null? look at the next chain.
-            //repeat until I have a non-null chain -or- I have checked all
         }
 
         private void updateNexts() {
-            while(chains[nextChain]==null && nextChain<size) {//if the chain is empty, make sure its null
-                nextChain+=1;
+            nextChain += 1;
+
+            boolean search = true;
+            while(search) {
+                while (nextChain < chains.length && chains[nextChain] == null) {//if the chain is empty, make sure its null, no empty iterators.
+                    nextChain += 1;
+                }
+                search = false;
+                if(nextChain<chains.length&&!chains[nextChain].iterator().hasNext()){
+                    nextChain += 1;
+                    search = true;
+                }
             }
-            if(chains[nextChain]!=null) {
+            if(nextChain<chains.length) {//outof index error immenent
                 nextIterator = chains[nextChain].iterator();
                 //confirm that this iterator has a next, assign next, handle the empty chain
-            } else if (nextChain<size) {
+            } else {
                 nextIterator = null;
                 nextChain = -1;
             }
