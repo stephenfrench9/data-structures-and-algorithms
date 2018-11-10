@@ -54,12 +54,15 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public V get(K key) {
-        int hashkey = key.hashCode();
-        int index = Math.abs(hashkey%tablesize);
+        int hashkey = 0;
+        int index = 0;
+        if(key != null) {
+            hashkey = key.hashCode();
+            index = Math.abs(hashkey%tablesize);
+        }
         if(chains[index]==null) {
             throw new NoSuchKeyException();
         }
-
         return chains[index].get(key);
     }
 
@@ -73,8 +76,15 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         } catch(NoSuchKeyException e) {
             size += 1;
         }
-        int hashkey = key.hashCode();
-        int index = Math.abs(hashkey % tablesize);
+
+
+        int hashkey = 0;
+        int index = 0;
+        if(key!=null) {
+            hashkey = key.hashCode();
+            index = Math.abs(hashkey % tablesize);
+        }
+
         if (chains[index] == null) {
             chains[index] = new ArrayDictionary<>();
         }
@@ -85,13 +95,10 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public V remove(K key) {
-        int hashedKey = key.hashCode();
-        int index = Math.abs(hashedKey%tablesize);
-
+        int index = hashMod(key);
         if(chains[index]==null) {
             throw new NoSuchKeyException();
         }
-
         try {
             V removed = chains[index].remove(key);
             size -= 1;
@@ -103,8 +110,7 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
 
     @Override
     public boolean containsKey(K key) {
-        int hashedKey = key.hashCode();
-        int index = Math.abs(hashedKey%tablesize);
+        int index = hashMod(key);
         if(chains[index]==null) {
             return false;
         }
@@ -235,5 +241,15 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
                 nextChain = -1;
             }
         }
+    }
+
+    public int hashMod(K key) {
+        int hash = 0;
+        int index = 0;
+        if(key!=null) {
+            hash = key.hashCode();
+            index = Math.abs(hash % tablesize);
+        }
+        return index;
     }
 }

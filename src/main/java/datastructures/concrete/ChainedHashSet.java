@@ -3,6 +3,7 @@ package datastructures.concrete;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.ISet;
+import misc.exceptions.NoSuchKeyException;
 import misc.exceptions.NotYetImplementedException;
 
 import java.util.Iterator;
@@ -21,26 +22,31 @@ public class ChainedHashSet<T> implements ISet<T> {
 
     @Override
     public void add(T item) {
-        throw new NotYetImplementedException();
+        map.put(item, false);
     }
 
     @Override
     public void remove(T item) {
-        throw new NotYetImplementedException();
+        try {
+            map.remove(item);
+        } catch (NoSuchKeyException nk) {
+            throw new NoSuchElementException();
+        }
     }
 
     @Override
     public boolean contains(T item) {
-        throw new NotYetImplementedException();
+        return map.containsKey(item);
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return map.size();
     }
 
     @Override
     public Iterator<T> iterator() {
+
         return new SetIterator<>(this.map.iterator());
     }
 
@@ -49,17 +55,22 @@ public class ChainedHashSet<T> implements ISet<T> {
         private Iterator<KVPair<T, Boolean>> iter;
 
         public SetIterator(Iterator<KVPair<T, Boolean>> iter) {
+
             this.iter = iter;
         }
 
         @Override
         public boolean hasNext() {
-            throw new NotYetImplementedException();
+            return iter.hasNext();
         }
 
         @Override
         public T next() {
-            throw new NotYetImplementedException();
+            KVPair<T, Boolean> p = iter.next();
+            if(p != null) {
+                return p.getKey();
+            }
+            throw new NoSuchElementException();
         }
     }
 }
