@@ -1,5 +1,6 @@
 package datastructures.dictionaries;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
@@ -10,6 +11,7 @@ import misc.exceptions.NoSuchKeyException;
 import org.junit.Test;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class TestChainedHashDictionary extends TestDictionary {
     protected <K, V> IDictionary<K, V> newDictionary() {
@@ -97,7 +99,14 @@ public class TestChainedHashDictionary extends TestDictionary {
         d.remove("keyA"); assertEquals(true, d.iterator().hasNext());
         d.remove("keyB"); assertEquals(true, d.iterator().hasNext());
         d.remove("keyC"); assertEquals(false, d.iterator().hasNext());
-        assertEquals(null, d.iterator().next());
+
+
+        try {
+            d.iterator().next();
+            fail("Expected NoSuchElementException");
+        } catch(NoSuchElementException nk) {
+            //great
+        }
 
         d = makeBasicDictionary();
         Iterator<KVPair<String, String>> it = d.iterator();
@@ -108,7 +117,12 @@ public class TestChainedHashDictionary extends TestDictionary {
         assertEquals(true, it.hasNext());
         assertEquals("keyC", it.next().getKey());
         assertEquals(false, it.hasNext());
-        assertEquals(null, it.next());
+        try {
+            it.next();
+            fail("Expected NoSuchElementException");
+        } catch(NoSuchElementException nk) {
+            //great
+        }
     }
 
     @Test(timeout=SECOND)

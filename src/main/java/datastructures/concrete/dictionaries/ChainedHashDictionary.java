@@ -208,15 +208,16 @@ public class ChainedHashDictionary<K, V> implements IDictionary<K, V> {
         @Override
         public KVPair<K, V> next() {
 
-            KVPair<K, V> next = null;
-            if(nextChain != -1) {
-                next = nextIterator.next();
+            if(nextChain == -1) {
+                throw new NoSuchElementException();
+            } else {
+                KVPair<K, V> next = nextIterator.next();
                 if(!nextIterator.hasNext()) {
                     updateNexts();
                 }
+                return next;
             }
 
-            return next;
         }
 
         private void updateNexts() {

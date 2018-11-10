@@ -34,15 +34,9 @@ public class TestArrayDictionary extends TestDictionary {
 
         Iterator it = d.iterator();
 
-        while(it.hasNext()) {
-            System.out.println(it.next().equals(new KVPair<String, Integer>("one", 1)));
-        }
-
-        for(KVPair<String, Integer> pari: d) {
-            System.out.println(pari);
-        }
-
-        System.out.println(d.get("three"));
+        assertEquals(it.next(),new KVPair<>("one",1));
+        assertEquals(it.next(),new KVPair<>("two", 2));
+        assertEquals(it.next(),new KVPair<>("three", 3));
     }
 
 }

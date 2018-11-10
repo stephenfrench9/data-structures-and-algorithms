@@ -563,8 +563,6 @@ public class TestDoubleLinkedList extends BaseTest {
         assertEquals("that", deleted);
     }
 
-
-
     @Test(timeout = 1000)
     public void testDeleteAddWeaveEmptyList() {
         //on an empty list
