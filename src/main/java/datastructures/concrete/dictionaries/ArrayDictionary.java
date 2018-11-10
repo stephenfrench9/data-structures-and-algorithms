@@ -2,50 +2,186 @@ package datastructures.concrete.dictionaries;
 
 import datastructures.concrete.KVPair;
 import datastructures.interfaces.IDictionary;
-import misc.exceptions.NotYetImplementedException;
+import misc.exceptions.NoSuchKeyException;
 
 import java.util.Iterator;
 
 /**
- * Replace this class with your ArrayDictionary implementation from project 1.
+ * See IDictionary for more details on what this class should do
  */
 public class ArrayDictionary<K, V> implements IDictionary<K, V> {
+    // You may not change or rename this field: we will be inspecting
+    // it using our private tests.
+    private Pair<K, V>[] pairs;
+    private int size;
+
+    // You're encouraged to add extra fields (and helper methods) though!
+
     public ArrayDictionary() {
-        throw new NotYetImplementedException();
+        pairs = makeArrayOfPairs(10);
+        size = 0;
+    }
+
+    /**
+     * This method will return a new, empty array of the given size
+     * that can contain Pair<K, V> objects.
+     *
+     * Note that each element in the array will initially be null.
+     */
+    @SuppressWarnings("unchecked")
+    private Pair<K, V>[] makeArrayOfPairs(int arraySize) {
+        // It turns out that creating arrays of generic objects in Java
+        // is complicated due to something known as 'type erasure'.
+        //
+        // We've given you this helper method to help simplify this part of
+        // your assignment. Use this helper method as appropriate when
+        // implementing the rest of this class.
+        //
+        // You are not required to understand how this method works, what
+        // type erasure is, or how arrays and generics interact. Do not
+        // modify this method in any way.
+        return (Pair<K, V>[]) (new Pair[arraySize]);
+
+    }
+
+    private int find(K key) {
+        for(int k = 0; k < size; k += 1) {
+            if(key != null) {
+                if (key.equals(pairs[k].key)) {
+                    return k;
+                }
+            } else {
+                if (key == pairs[k].key) {
+                    return k;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
     public V get(K key) {
-        throw new NotYetImplementedException();
-    }
+        int index = find(key);
 
-    @Override
-    public V getOrDefault(K key, V defaultValue) {
-        throw new NotYetImplementedException();
+        if(index == -1) {
+            throw new NoSuchKeyException();
+        }
+
+        return pairs[index].value;
     }
 
     @Override
     public void put(K key, V value) {
-        throw new NotYetImplementedException();
+
+        if(size == pairs.length) {
+            Pair<K, V>[] newList = makeArrayOfPairs(pairs.length + 10);
+            for(int k=0; k < size; k++) {
+                newList[k] = pairs[k];
+            }
+            pairs = newList;
+        }
+
+        int index = find(key);
+        Pair<K, V> p = new Pair<K, V>(key, value);
+
+        if(index == -1) {
+            pairs[size] = p;
+            size += 1;
+        } else {
+            pairs[index] = p;
+        }
     }
 
     @Override
     public V remove(K key) {
-        throw new NotYetImplementedException();
+        int index = find(key);
+
+        if(index==-1) {
+            throw new NoSuchKeyException();
+        } else {
+            V r = pairs[index].value;
+            pairs[index] = pairs[size-1];
+            pairs[size] = null;
+            size -= 1;
+            return r;
+        }
     }
 
     @Override
     public boolean containsKey(K key) {
-        throw new NotYetImplementedException();
+           int index = find(key);
+           if(index > -1) {
+               return true;
+           } else {
+               return false;
+           }
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return size;
     }
 
     @Override
     public Iterator<KVPair<K, V>> iterator() {
-        throw new NotYetImplementedException();
+
+        Iterator<KVPair<K, V>> it;
+        it = new Iterator<KVPair<K, V>>() {
+            int current = 0;
+
+            @Override
+            public boolean hasNext() {
+                return current < size;
+            }
+
+            @Override
+            public KVPair<K, V> next() {
+                if(hasNext()) {
+                    current += 1;
+                    return new KVPair<>(pairs[current-1].key, pairs[current-1].value);
+                } else {
+                    return null;
+                }
+            }
+        };
+        return it;
     }
+
+    private static class Pair<K, V> {
+        public K key;
+        public V value;
+
+        // You may add constructors and methods to this class as necessary.
+        public Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return this.key + "=" + this.value;
+        }
+    }
+
+//    private class MyIterator implements Iterator<KVPair<K, V>> {
+//        int next = 0;
+//
+//        public MyIterator() {
+//
+//        }
+//
+//        @Override
+//        public boolean hasNext() {
+//            return false;
+//        }
+//
+//        @Override
+//        public KVPair<K, V> next() {
+//            return null;
+//        }
+//    }
 }
