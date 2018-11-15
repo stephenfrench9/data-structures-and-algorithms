@@ -17,11 +17,13 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // You may NOT rename this field: we will be inspecting it within
     // our private tests.
     private T[] heap;
+    private int size;
 
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
-        throw new NotYetImplementedException();
+        heap = makeArrayOfT(100);
+        size = 0;
     }
 
     /**
@@ -42,7 +44,9 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
-        throw new NotYetImplementedException();
+
+
+        return null;
     }
 
     @Override
@@ -52,11 +56,61 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public void insert(T item) {
-        throw new NotYetImplementedException();
+        heap[size] = item;
+        int newestItem = size;
+        size += 1;
+        up(newestItem);
     }
 
     @Override
     public int size() {
-        throw new NotYetImplementedException();
+        return size;
     }
+
+    @Override
+    public void printTree() {
+        int level = 0;
+        int current = 0;
+        while(current < size) {
+
+            int num = (int) Math.pow(NUM_CHILDREN, level);
+            for(int j = 0; j < num; j++) {
+                System.out.print(heap[current] + " ");
+                current += 1;
+            }
+            System.out.println("");
+            level += 1;
+
+        }
+    }
+
+    @Override
+    public T[] array() {
+        return heap;
+    }
+
+    private int findChild(int parent) {
+        return 4*parent + 1;
+    }
+
+    private int findParent(int child) {
+        return (child - 1)/4;
+    }
+
+    private void up(int index) { //index is the element that you might push up
+        if(index == 0) {
+            return;
+        }
+
+        T floater = heap[index];
+        T sinker = heap[findParent(index)];
+
+        if(floater.compareTo(sinker) < 0) {
+            heap[index] = sinker;
+            heap[findParent(index)] = floater;
+            up(findParent(index));
+        }
+
+    }
+
 }

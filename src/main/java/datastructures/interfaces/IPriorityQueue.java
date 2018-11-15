@@ -47,4 +47,8 @@ public interface IPriorityQueue<T extends Comparable<T>> {
     default boolean isEmpty() {
         return this.size() == 0;
     }
+
+    void printTree();
+
+    T[] array();
 }
