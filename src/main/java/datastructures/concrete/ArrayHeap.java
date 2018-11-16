@@ -12,13 +12,11 @@ import java.util.Arrays;
 public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
     // See spec: you must implement a implement a 4-heap.
     private static final int NUM_CHILDREN = 4;
-
+    private T[] heap;
+    private int size;
     // You MUST use this field to store the contents of your heap.
     // You may NOT rename this field: we will be inspecting it within
     // our private tests.
-    private T[] heap;
-    private int size;
-
     // Feel free to add more fields and constants.
 
     public ArrayHeap() {
@@ -44,14 +42,47 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public T removeMin() {
+        if (size==0) {
+            throw new EmptyContainerException();
+        } else if (size==1) {
+            T min = heap[0];
+            heap[0] = null;
+            return min;
+        } else {
+            T min = heap[0];
+            heap[0] = heap[size-1];
+            heap[size] = null;
+            size -= 1;
+            down(0);
+            return min;
+        }
+    }
 
-
-        return null;
+    private void down(int i) {
+        int firstChild = findChild(i);
+        if(heap[firstChild]==null) {
+            return;
+        }
+        int swapper = firstChild;
+        for(int j = 1; j < NUM_CHILDREN; j++) {
+            if(heap[firstChild+j]!=null && heap[swapper].compareTo(heap[firstChild + j]) > 0) {
+                swapper = firstChild +j;
+            }
+        }
+        if(heap[i].compareTo(heap[swapper]) > 0) {
+            T movingUp = heap[swapper];
+            heap[swapper] = heap[i];
+            heap[i] = movingUp;
+            down(swapper);
+        }
     }
 
     @Override
     public T peekMin() {
-        throw new NotYetImplementedException();
+        if(size==0) {
+            throw new EmptyContainerException();
+        }
+        return heap[0];
     }
 
     @Override

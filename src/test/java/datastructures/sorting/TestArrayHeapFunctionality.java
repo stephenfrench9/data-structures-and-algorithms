@@ -42,7 +42,6 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertEquals(1, heap.size());
     }
 
-
     @Test(timeout=SECOND)
     public void basicInsert() {
         IPriorityQueue<Integer> heap = this.makeInstance();
@@ -64,4 +63,36 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertListMatches(heap.array(), new Integer[] {-1,0,2,3,4,1});
     }
 
+    @Test(timeout=SECOND)
+    public void peakMin() {
+        IPriorityQueue<String> heap = makeInstance();
+        heap.insert("frank");
+        heap.insert("adam");
+        heap.insert("bob");
+        heap.insert("lucie");
+        heap.insert("zach");
+        heap.insert("abbey");
+        assertListMatches(heap.array(), new String[] {"abbey", "adam", "bob", "lucie", "zach", "frank"});
+        assertEquals("abbey", heap.peekMin());
+    }
+
+    @Test(timeout=SECOND)
+    public void removeMin() {
+        IPriorityQueue<String> heap = makeInstance();
+        heap.insert("frank");
+        heap.insert("adam");
+        heap.insert("bob");
+        heap.insert("lucie");
+        heap.insert("zach");
+        heap.insert("abbey");
+        assertListMatches(heap.array(), new String[] {"abbey", "adam", "bob", "lucie", "zach", "frank"});
+
+        String min = heap.removeMin();
+        System.out.println(min);
+        assertListMatches(heap.array(), new String[] {"adam", "frank", "bob", "lucie", "zach"});
+//        Comparable<String>[] array = heap.array();
+//        for(int i = 0; i < array.length; i++) {
+//            System.out.print(array[i] + ", ");
+//        }
+    }
 }
