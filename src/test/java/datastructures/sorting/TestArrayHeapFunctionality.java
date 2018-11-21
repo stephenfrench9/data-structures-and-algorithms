@@ -88,11 +88,24 @@ public class TestArrayHeapFunctionality extends BaseTest {
         assertListMatches(heap.array(), new String[] {"abbey", "adam", "bob", "lucie", "zach", "frank"});
 
         String min = heap.removeMin();
-        System.out.println(min);
         assertListMatches(heap.array(), new String[] {"adam", "frank", "bob", "lucie", "zach"});
-//        Comparable<String>[] array = heap.array();
-//        for(int i = 0; i < array.length; i++) {
-//            System.out.print(array[i] + ", ");
-//        }
+        min = heap.removeMin();
+        assertListMatches(heap.array(), new String[] {"bob", "frank", "zach", "lucie"});
+        min = heap.removeMin();
+        assertListMatches(heap.array(), new String[] {"frank", "lucie", "zach"});
+        min = heap.removeMin();
+        assertListMatches(heap.array(), new String[] {"lucie", "zach"});
+        min = heap.removeMin();
+        assertListMatches(heap.array(), new String[] {"zach"});
+        min = heap.removeMin();
+        assertListMatches(heap.array(), new String[] {});
+        try {
+            min = heap.removeMin();
+            fail("an exception should have been thrown");
+        } catch( EmptyContainerException e ) {
+            //good, we tried to remove min from an empty list, and we got an exception
+        }
+
+
     }
 }
