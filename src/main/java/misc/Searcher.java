@@ -1,7 +1,12 @@
 package misc;
 
+import datastructures.concrete.ArrayHeap;
+import datastructures.concrete.DoubleLinkedList;
 import datastructures.interfaces.IList;
+import misc.exceptions.EmptyContainerException;
 import misc.exceptions.NotYetImplementedException;
+
+import java.util.Iterator;
 
 public class Searcher {
     /**
@@ -19,6 +24,48 @@ public class Searcher {
      * @throws IllegalArgumentException  if k < 0
      */
     public static <T extends Comparable<T>> IList<T> topKSort(int k, IList<T> input) {
+
+        if(k<1) {
+            throw new IllegalArgumentException();
+        }
+
+
+        ArrayHeap<T> heap = new ArrayHeap<T>();
+        for(T i: input) {
+            if(heap.size() < k) {
+                System.out.println("initial insert " + i);
+                heap.insert(i);
+            } else {
+                if(heap.peekMin().compareTo(i) < 0) {
+                    T min = heap.removeMin();
+                    System.out.println("Removed: " + min);
+                    heap.insert(i);
+
+                    System.out.println("Inserted: " + i);
+                    System.out.println("Size is: " + heap.size());
+                    System.out.println();
+                }
+            }
+        }
+
+
+        DoubleLinkedList<T> theAns = new DoubleLinkedList<T>();
+
+        System.out.println("LOOK AT THE HEAP");
+        T[] heapE = heap.array();
+        for(int index = 0; index < heapE.length; index ++) {
+            System.out.println(heapE[index]);
+        }
+
+
+        int elementsInHeap = heap.size();
+        for(int j = 0; j < elementsInHeap; j++) {
+
+            T min = heap.removeMin();
+            System.out.println("Size is: " + heap.size());
+            System.out.println("Heap element: " + min);
+            theAns.add(min);
+        }
         // Implementation notes:
         //
         // - This static method is a _generic method_. A generic method is similar to
@@ -31,6 +78,12 @@ public class Searcher {
         // - You should implement this method by using your ArrayHeap for the sake of
         //   efficiency.
 
-        throw new NotYetImplementedException();
+        for(int h = theAns.size() - 1; h != -1; h--) {
+            T mover = theAns.get(h);
+            theAns.delete(h);
+            theAns.add(mover);
+        }
+
+        return theAns;
     }
 }

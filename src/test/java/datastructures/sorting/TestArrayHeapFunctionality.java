@@ -67,11 +67,23 @@ public class TestArrayHeapFunctionality extends BaseTest {
     public void peakMin() {
         IPriorityQueue<String> heap = makeInstance();
         heap.insert("frank");
+        assertEquals(1,heap.size());
+
         heap.insert("adam");
+        assertEquals(2,heap.size());
+
         heap.insert("bob");
+        assertEquals(3,heap.size());
+
         heap.insert("lucie");
+        assertEquals(4,heap.size());
+
         heap.insert("zach");
+        assertEquals(5,heap.size());
+
         heap.insert("abbey");
+        assertEquals(6,heap.size());
+        System.out.println(heap.size());
         assertListMatches(heap.array(), new String[] {"abbey", "adam", "bob", "lucie", "zach", "frank"});
         assertEquals("abbey", heap.peekMin());
     }
@@ -105,7 +117,5 @@ public class TestArrayHeapFunctionality extends BaseTest {
         } catch( EmptyContainerException e ) {
             //good, we tried to remove min from an empty list, and we got an exception
         }
-
-
     }
 }
