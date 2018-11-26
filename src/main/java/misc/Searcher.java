@@ -33,17 +33,17 @@ public class Searcher {
         ArrayHeap<T> heap = new ArrayHeap<T>();
         for(T i: input) {
             if(heap.size() < k) {
-                System.out.println("initial insert " + i);
+//                System.out.println("initial insert " + i);
                 heap.insert(i);
             } else {
                 if(heap.peekMin().compareTo(i) < 0) {
                     T min = heap.removeMin();
-                    System.out.println("Removed: " + min);
+//                    System.out.println("Removed: " + min);
                     heap.insert(i);
 
-                    System.out.println("Inserted: " + i);
-                    System.out.println("Size is: " + heap.size());
-                    System.out.println();
+//                    System.out.println("Inserted: " + i);
+//                    System.out.println("Size is: " + heap.size());
+//                    System.out.println();
                 }
             }
         }
@@ -51,10 +51,10 @@ public class Searcher {
 
         DoubleLinkedList<T> theAns = new DoubleLinkedList<T>();
 
-        System.out.println("LOOK AT THE HEAP");
+//        System.out.println("LOOK AT THE HEAP");
         T[] heapE = heap.array();
         for(int index = 0; index < heapE.length; index ++) {
-            System.out.println(heapE[index]);
+//            System.out.println(heapE[index]);
         }
 
 
@@ -62,8 +62,8 @@ public class Searcher {
         for(int j = 0; j < elementsInHeap; j++) {
 
             T min = heap.removeMin();
-            System.out.println("Size is: " + heap.size());
-            System.out.println("Heap element: " + min);
+//            System.out.println("Size is: " + heap.size());
+//            System.out.println("Heap element: " + min);
             theAns.add(min);
         }
         // Implementation notes:
@@ -78,11 +78,11 @@ public class Searcher {
         // - You should implement this method by using your ArrayHeap for the sake of
         //   efficiency.
 
-        for(int h = theAns.size() - 1; h != -1; h--) {
-            T mover = theAns.get(h);
-            theAns.delete(h);
-            theAns.add(mover);
-        }
+//        for(int h = theAns.size() - 1; h != -1; h--) {
+//            T mover = theAns.get(h);
+//            theAns.delete(h);
+//            theAns.add(mover);
+//        }
 
         return theAns;
     }
