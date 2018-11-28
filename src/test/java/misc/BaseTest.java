@@ -1,9 +1,17 @@
 package misc;
 
+import datastructures.interfaces.IList;
 import org.junit.Assert;
 
 public class BaseTest {
     protected static final int SECOND = 1000;
+
+    protected void assertIListsMatch(IList<Integer> actual, IList<Integer> expected) {
+        assertEquals(actual.size(), expected.size());
+        for(int i = 0; i < actual.size(); i++) {
+            assertEquals(actual.get(i), expected.get(i));
+        }
+    }
 
     protected static void assertEquals(double expected, double actual, double delta) {
         Assert.assertEquals(expected, actual, delta);

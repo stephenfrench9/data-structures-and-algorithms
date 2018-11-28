@@ -61,7 +61,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     private void down(int i) {
         int firstChild = findChild(i);
-        if(heap[firstChild]==null) {
+        if(firstChild >= heap.length || heap[firstChild]==null) {
             return;
         }
         int swapper = firstChild;
