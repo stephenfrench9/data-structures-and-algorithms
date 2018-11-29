@@ -13,28 +13,51 @@ import static org.junit.Assert.assertTrue;
  */
 public class TestSortingStress extends BaseTest {
     @Test(timeout=10*SECOND)
-    public void testPlaceholder() {
-        IList<Integer> list = new DoubleLinkedList<Integer>();
-        IList<Integer> list1 = new DoubleLinkedList<Integer>();
+    public void tenThousandIntegers() {
+        IList<Integer> raw = new DoubleLinkedList<Integer>();
+        IList<Integer> expected = new DoubleLinkedList<Integer>();
 
-        int big = (int) Math.pow(10, 6);
-
+        int big = (int) Math.pow(10, 4);
         for(int i = 0; i < big; i++)
-            list.add(i);
+            raw.add(i);
+        for(int i = 9990; i < big; i++)
+            expected.add(i);
 
-        for(int i = 10; i < big; i++)
-            list1.add(i);
+        IList<Integer> filtered = Searcher.topKSort(big - 9990, raw);
+        assertIListsMatch(filtered, expected);
+    }
 
-        IList<Integer> top = Searcher.topKSort(big - 10, list);
+    @Test(timeout=10*SECOND)
+    public void largeK() {
+        IList<Integer> raw = new DoubleLinkedList<Integer>();
+        IList<Integer> expected = new DoubleLinkedList<Integer>();
 
-//        for(int ele : top)
-//            System.out.println(ele);
-//        System.out.println("................");
-//        for(int ele : list1)
-//            System.out.println(ele);
+        int big = (int) Math.pow(10, 4);
+        for(int i = 0; i < big; i++)
+            raw.add(i);
+        for(int i = 20; i < big; i++)
+            expected.add(i);
 
-        assertIListsMatch(top, list1);
+        IList<Integer> filtered = Searcher.topKSort(big - 20, raw);
+        assertIListsMatch(filtered, expected);
+    }
 
-        assertTrue(true);
+    @Test(timeout=10*SECOND)
+    public void middleOfList() {
+        IList<Integer> raw = new DoubleLinkedList<Integer>();
+        IList<Integer> expected = new DoubleLinkedList<Integer>();
+
+        int big = (int) Math.pow(10, 4);
+        for(int i = 0; i < big; i++)
+            raw.add(i);
+        for(int i = big - 1; i >= 0; i--)
+            raw.add(i);
+        for(int i = big-10; i < big; i++) {
+            expected.add(i);
+            expected.add(i);
+        }
+
+        IList<Integer> filtered = Searcher.topKSort(20, raw);
+        assertIListsMatch(filtered, expected);
     }
 }

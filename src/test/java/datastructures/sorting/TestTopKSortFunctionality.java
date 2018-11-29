@@ -32,7 +32,6 @@ public class TestTopKSortFunctionality extends BaseTest {
         return red;
     }
 
-
     private void assertStringIListsMatch(IList<String> actual, IList<String> expected) {
         assertEquals(actual.size(), expected.size());
         for(int i = 0; i < actual.size(); i++) {

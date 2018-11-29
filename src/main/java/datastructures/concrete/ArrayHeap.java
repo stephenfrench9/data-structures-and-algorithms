@@ -88,6 +88,20 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
 
     @Override
     public void insert(T item) {
+
+        if(item == null) {
+            throw new IllegalArgumentException();
+        }
+
+        if(size==heap.length) {
+            T[] newArray = makeArrayOfT(heap.length*2);
+            for(int j = 0; j < heap.length; j++) {
+                newArray[j] = heap[j];
+            }
+            heap = newArray;
+        }
+
+
         heap[size] = item;
         int newestItem = size;
         size += 1;

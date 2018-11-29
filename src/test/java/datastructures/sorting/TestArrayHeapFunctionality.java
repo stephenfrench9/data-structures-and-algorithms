@@ -34,7 +34,6 @@ public class TestArrayHeapFunctionality extends BaseTest {
         }
     }
 
-
     @Test(timeout=SECOND)
     public void basicSize() {
         IPriorityQueue<Integer> heap = this.makeInstance();
@@ -50,7 +49,40 @@ public class TestArrayHeapFunctionality extends BaseTest {
         }
 
         assertListMatches(heap.array(), new Integer[] {0,1,2,3,4});
+    }
 
+    @Test(timeout=SECOND)
+    public void emptyHeap() {
+        IPriorityQueue<Integer> heap = this.makeInstance();
+        heap.insert(10);
+        assertEquals(heap.size(),1);
+        heap.removeMin();
+        assertEquals(heap.size(), 0);
+        assertListMatches(heap.array(), new Integer[] {});
+    }
+
+    @Test(timeout=SECOND)
+    public void nullElement() {
+        IPriorityQueue<Integer> heap = this.makeInstance();
+        try {
+            heap.insert(null);
+            fail("Null was added, heap must throw exception");
+        } catch (IllegalArgumentException e) {
+            //good
+        }
+    }
+
+    @Test(timeout=SECOND)
+    public void repeatedElements() {
+        IPriorityQueue<Integer> heap = this.makeInstance();
+        Integer big = (int) Math.pow(10,4);
+        Integer[] expected = new Integer[big];
+        for(int i = 0; i < big; i++) {
+            heap.insert(10);
+            expected[i] = 10;
+        }
+        assertEquals(heap.size(), big);
+        assertListMatches(heap.array(), expected);
     }
 
     @Test(timeout=SECOND)
