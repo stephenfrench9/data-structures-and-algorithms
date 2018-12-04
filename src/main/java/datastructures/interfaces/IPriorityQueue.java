@@ -50,7 +50,7 @@ public interface IPriorityQueue<T extends Comparable<T>> {
      * @throws  UnsupportedOperationException  if the IPriorityQueue implementation decides not to support this method
      * @throws  NoSuchElementException  if the given item does not exist
      */
-    void remove(T item);
+//    void remove(T item);
 
     /**
      * Returns the number of elements contained within this queue.
@@ -63,4 +63,8 @@ public interface IPriorityQueue<T extends Comparable<T>> {
     default boolean isEmpty() {
         return this.size() == 0;
     }
+
+    void printTree();
+
+    T[] array();
 }
