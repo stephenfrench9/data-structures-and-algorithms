@@ -57,7 +57,7 @@ public class MainWindow extends JFrame {
                 new RandomMazeCarver(1.0));
         baseCarvers.put(
                 "Delete random edges (keep 30% of edges)",
-                new RandomMazeCarver(0.3));
+                new RandomMazeCarver(0.05));
         baseCarvers.put(
                 "Delete random edges (keep 50% of edges)",
                 new RandomMazeCarver(0.5));

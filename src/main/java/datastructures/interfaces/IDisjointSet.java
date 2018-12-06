@@ -27,4 +27,6 @@ public interface IDisjointSet<T> {
      * @throws IllegalArgumentException  if item1 and item2 are already a part of the same set
      */
     public void union(T item1, T item2);
+
+    void print_pointers();
 }
