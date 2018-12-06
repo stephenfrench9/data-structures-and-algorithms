@@ -60,6 +60,13 @@ public class TestArrayDisjointSet extends BaseTest {
     }
 
     @Test(timeout=SECOND)
+    public void repeatedElement() {
+        IDisjointSet<String> forest = createForest(new String[]{"a", "a", "c"});
+        forest.print_pointers();
+    }
+
+
+    @Test(timeout=SECOND)
     public void testMakeSetAndFindSetSimple() {
         String[] items = new String[] {"a", "b", "c", "d", "e"};
         IDisjointSet<String> forest = this.createForest(items);

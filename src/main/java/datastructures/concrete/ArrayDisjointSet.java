@@ -26,6 +26,10 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
 
     @Override
     public void makeSet(T item) {
+        if(values.containsKey(item)) {
+            throw new IllegalArgumentException();
+        }
+
         if(size == pointers.length) {
             int[] new_pointers = new int[2*pointers.length];
             for(int i = 0; i < pointers.length; i++) {
