@@ -34,6 +34,16 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
 
     @Override
     public void makeSet(T item) {
+        if(size == values.length) {
+            int[] new_pointers = new int[2*pointers.length];
+            T[] new_values = makeArrayOfT(2*values.length);
+            for(int i = 0; i < values.length; i++) {
+                new_values[i] = values[i];
+                new_pointers[i] = pointers[i];
+            }
+            pointers = new_pointers;
+            values = new_values;
+        }
         values[size] = item;
         pointers[size] = -1;
         size += 1;
@@ -46,6 +56,7 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
                 itemId = i;
             }
         }
+
         if(itemId == -1) {
             throw new IllegalArgumentException();
         }
@@ -72,15 +83,9 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
     public void union(T item1, T item2) {
         int id1 = findSet(item1);
         int id2 = findSet(item2);
-
         if(id1 == id2) {
             throw new IllegalArgumentException();
         }
-
-        //we have two distinct ids. They are roots.
-        //values[id] holds the value
-        //pointers[id] gives the rank. ROOTS.
-
         int rank1 = pointers[id1];
         int rank2 = pointers[id2];
 

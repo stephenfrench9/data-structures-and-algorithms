@@ -59,7 +59,6 @@ public class TestArrayDisjointSet extends BaseTest {
     public void basicInsertAndFind() {
         IDisjointSet<String> forest = createForest(new String[]{"a", "b", "c"});
         int seta = forest.findSet("a");
-        System.out.println(seta);
     }
 
     @Test(timeout=SECOND)
