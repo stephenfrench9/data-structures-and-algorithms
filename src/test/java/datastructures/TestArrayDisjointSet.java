@@ -22,14 +22,14 @@ public class TestArrayDisjointSet extends BaseTest {
         }
     }
 
-    @Test(timeout=SECOND)
+    @Test(timeout=SECOND) //my test
     public void basicInsertAndFind() {
         IDisjointSet<String> forest = createForest(new String[]{"a", "b", "c"});
         int seta = forest.findSet("a");
         assertEquals(seta,0);
     }
 
-    @Test(timeout=SECOND)
+    @Test(timeout=SECOND) //my test
     public void basicUnion() {
         String[] trees = new String[]{"a", "aa", "b", "bb", "c", "cc", "d", "dd", "e", "ee", "f", "ff"};
         IDisjointSet<String> forest =
@@ -59,12 +59,61 @@ public class TestArrayDisjointSet extends BaseTest {
         }
     }
 
-    @Test(timeout=SECOND)
+    @Test(timeout=SECOND) //my test
     public void repeatedElement() {
-        IDisjointSet<String> forest = createForest(new String[]{"a", "a", "c"});
-        forest.print_pointers();
+        try {
+            IDisjointSet<String> forest = createForest(new String[]{"a", "a", "c"});
+            fail("You shouldn't be able to put the same element into disjoint sets twice");
+        } catch(IllegalArgumentException e) {
+            //good to be hear
+        }
     }
 
+    @Test(timeout=4*SECOND) //my test
+    public void largeSetReaptedElement() {
+        ArrayDisjointSet<Integer> forest = new ArrayDisjointSet<>();
+        forest.makeSet(0);
+
+        int numItems = 5000;
+        for (int i = 1; i < numItems; i++) {
+            forest.makeSet(i);
+            forest.union(0, i);
+        }
+
+        try {
+            forest.makeSet(0);
+            fail("Adding the same set again");
+        } catch(IllegalArgumentException ex) {
+            //good to be here.
+        }
+
+    }
+
+//    @Test(timeout=4*SECOND)
+//    public void testLargeForest2() {
+//        IDisjointSet<Integer> forest = new ArrayDisjointSet<>();
+//        forest.makeSet(1);
+//
+//        int numSets = 10;
+//        int numItems = 5000;
+//        for(int k = 0; k < numSets; k++) {
+//            forest.makeSet(k*numItems + 1);
+//            for (int i = k*numItems+2; i < (k+1)*numItems; i++) {
+//                forest.makeSet(i);
+//                forest.union(k*numItems+1, i);
+//            }
+//        }
+//
+//        int cap = 6000;
+//
+//        int k = 0;
+//        int id = forest.findSet(k);
+//        for (int i = 0; i < cap; i++) {
+//            for (int j = 0; j < numItems; j++) {
+//                assertEquals(id, forest.findSet(j));
+//            }
+//        }
+//    }
 
     @Test(timeout=SECOND)
     public void testMakeSetAndFindSetSimple() {
