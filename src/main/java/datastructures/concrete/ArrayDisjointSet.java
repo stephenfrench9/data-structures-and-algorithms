@@ -1,5 +1,6 @@
 package datastructures.concrete;
 
+import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDisjointSet;
 import misc.exceptions.NotYetImplementedException;
 
@@ -10,57 +11,39 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
     // Note: do NOT rename or delete this field. We will be inspecting it
     // directly within our private tests.
     private int[] pointers; //lets assume this is like 'tree structure'
-    private T[] values;
+    private ChainedHashDictionary<T, Integer> values;
     int size;
 
     // However, feel free to add more methods and private helper methods.
     // You will probably need to add one or two more fields in order to
     // successfully implement this class.
 
-    private T[] makeArrayOfT(int size) {
-        // This helper method is basically the same one we gave you
-        // in ArrayDictionary and ChainedHashDictionary.
-        //
-        // As before, you do not need to understand how this method
-        // works, and should not modify it in any way.
-        return (T[]) (new Comparable[size]);
-    }
-
     public ArrayDisjointSet() {
         pointers = new int[20];
-        values = makeArrayOfT(20);
+        values = new ChainedHashDictionary<>();
         size = 0;
     }
 
     @Override
     public void makeSet(T item) {
-        if(size == values.length) {
+        if(size == pointers.length) {
             int[] new_pointers = new int[2*pointers.length];
-            T[] new_values = makeArrayOfT(2*values.length);
-            for(int i = 0; i < values.length; i++) {
-                new_values[i] = values[i];
+            for(int i = 0; i < pointers.length; i++) {
                 new_pointers[i] = pointers[i];
             }
             pointers = new_pointers;
-            values = new_values;
         }
-        values[size] = item;
+        values.put(item, size);
         pointers[size] = -1;
         size += 1;
     }
 
     private int findID(T item) {
-        int itemId = -1;
-        for(int i=0; i < values.length; i++) {
-            if(values[i] == item) {
-                itemId = i;
-            }
-        }
-
-        if(itemId == -1) {
+        if(!values.containsKey(item)) {
             throw new IllegalArgumentException();
+        } else {
+            return values.get(item);
         }
-        return itemId;
     }
 
     private int goUp(int index) {
@@ -104,7 +87,7 @@ public class ArrayDisjointSet<T> implements IDisjointSet<T> {
 
     public void print_pointers() {
         for(int k=0; k<size; k++) {
-            System.out.println(String.format("%3d :%3d :%4s", k, pointers[k], values[k]));
+            System.out.println(String.format("%3d :%3d", k, pointers[k]));
         }
     }
 }

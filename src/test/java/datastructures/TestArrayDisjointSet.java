@@ -23,6 +23,13 @@ public class TestArrayDisjointSet extends BaseTest {
     }
 
     @Test(timeout=SECOND)
+    public void basicInsertAndFind() {
+        IDisjointSet<String> forest = createForest(new String[]{"a", "b", "c"});
+        int seta = forest.findSet("a");
+        assertEquals(seta,0);
+    }
+
+    @Test(timeout=SECOND)
     public void basicUnion() {
         String[] trees = new String[]{"a", "aa", "b", "bb", "c", "cc", "d", "dd", "e", "ee", "f", "ff"};
         IDisjointSet<String> forest =
@@ -34,10 +41,8 @@ public class TestArrayDisjointSet extends BaseTest {
         forest.union("e", "ee");
         forest.union("f", "ff");
 
-        //perform all the same unions again, check that the correct exception is thrown
         for(int i=0; i < trees.length/2; i++) {
             try {
-//                System.out.printf("unioning %s with %s%n", trees[2*i], trees[2*i+1]);
                 forest.union(trees[2*i], trees[2*i+1]);
                 fail("exception should be thrown");
             } catch (IllegalArgumentException e) {
@@ -46,19 +51,12 @@ public class TestArrayDisjointSet extends BaseTest {
         }
         for(int i=0; i < trees.length/2; i++) {
             try {
-//                System.out.printf("unioning %s with %s%n", trees[2*i], trees[2*i+1]);
                 forest.union(trees[2*i+1], trees[2*i]);
                 fail("exception should be thrown");
             } catch (IllegalArgumentException e) {
                 //glad to be here
             }
         }
-    }
-
-    @Test(timeout=SECOND)
-    public void basicInsertAndFind() {
-        IDisjointSet<String> forest = createForest(new String[]{"a", "b", "c"});
-        int seta = forest.findSet("a");
     }
 
     @Test(timeout=SECOND)
