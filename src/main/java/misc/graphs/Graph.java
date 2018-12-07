@@ -1,8 +1,13 @@
 package misc.graphs;
 
+import datastructures.concrete.ArrayDisjointSet;
+import datastructures.concrete.ChainedHashSet;
 import datastructures.concrete.DoubleLinkedList;
+import datastructures.concrete.KVPair;
+import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
+import misc.Searcher;
 import misc.exceptions.NoPathExistsException;
 import misc.exceptions.NotYetImplementedException;
 
@@ -39,7 +44,7 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
     // - 'V' is the type of the vertices in the graph. The vertices can be
     //   any type the client wants -- there are no restrictions.
     //
-    // - 'E' is the type of the edges in the graph. We've contrained Graph
+    // - 'E' is the type of the edges in the graph. We've constrained Graph
     //   so that E *must* always be an instance of Edge<V> AND Comparable<E>.
     //
     //   What this means is that if you have an object of type E, you can use
@@ -51,7 +56,9 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
     //
     // Working with generics is really not the focus of this class, so if you
     // get stuck, let us know we'll try and help you get unstuck as best as we can.
-
+    private ChainedHashDictionary<V, DoubleLinkedList<E>> mDic;
+    private IList<E> mEdges;
+    private int mNumEdges;
     /**
      * Constructs a new graph based on the given vertices and edges.
      *
@@ -60,7 +67,26 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
      *                                   present in the 'vertices' list
      */
     public Graph(IList<V> vertices, IList<E> edges) {
-        // TODO: Your code here
+
+        //All my edges are going to be of type E in Graph.java
+        //I will trust that what is handed in will implement Edge and Comparable
+        //I am surprised that this class does not guarantee
+        ChainedHashDictionary<V, DoubleLinkedList<E>> al =
+                new ChainedHashDictionary<V, DoubleLinkedList<E>>();
+        mNumEdges = edges.size();
+        for(V v : vertices) {
+            DoubleLinkedList<E> vEdges = new DoubleLinkedList<E>();
+            for(E e:edges) {
+                V vert1 = e.getVertex1();
+                V vert2 = e.getVertex2();
+                if(v.equals(vert1) || v.equals(vert2)) {
+                    vEdges.add(e);
+                }
+            }
+            al.put(v, vEdges);
+        }
+        mDic = al;
+        mEdges = edges;
     }
 
     /**
@@ -87,14 +113,19 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
      * Returns the number of vertices contained within this graph.
      */
     public int numVertices() {
-        throw new NotYetImplementedException();
+        return mDic.size();
     }
 
     /**
      * Returns the number of edges contained within this graph.
      */
     public int numEdges() {
-        throw new NotYetImplementedException();
+        mDic.iterator();
+        int acc = 0;
+        for(KVPair<V, DoubleLinkedList<E>> v : mDic) {
+             acc += v.getValue().size();
+        }
+        return mNumEdges;
     }
 
     /**
@@ -106,7 +137,24 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
      * Precondition: the graph does not contain any unconnected components.
      */
     public ISet<E> findMinimumSpanningTree() {
-        throw new NotYetImplementedException();
+        ISet<E> mstEdges = new ChainedHashSet<>();
+        ArrayDisjointSet<V> verticeSets = new ArrayDisjointSet<V>();
+        for(KVPair<V, DoubleLinkedList<E>> v : mDic) {
+             verticeSets.makeSet(v.getKey());
+        }
+        IList<E> sortedEdges = Searcher.topKSort(mEdges.size() + 1, mEdges);
+
+        for(E e : sortedEdges) {
+            V vert1 = e.getVertex1();
+            V vert2 = e.getVertex2();
+            int set1 = verticeSets.findSet(vert1);
+            int set2 = verticeSets.findSet(vert2);
+            if(set1!=set2) {
+                mstEdges.add(e);
+                verticeSets.union(vert1, vert2);
+            }
+        }
+        return mstEdges;
     }
 
     /**
