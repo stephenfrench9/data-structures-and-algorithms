@@ -30,28 +30,6 @@ public class KruskalMazeCarver implements MazeCarver {
 
         remove = g.findMinimumSpanningTree();
 
-//        for(int i = 0; i < 1; i+=1) {
-//            Wall wall = it.next();
-//            remove.add(wall);
-//            Room r1 = wall.getRoom1();
-//            Room r2 = wall.getRoom2();
-//
-//            Point p1 = r1.getCenter();
-//            Point p2 = r2.getCenter();
-//
-//            double x1 = p1.getX();
-//            double y1 = p1.getY();
-//
-//            double x2 = p2.getX();
-//            double y2 = p2.getY();
-//
-//            System.out.println("X1: " + x1);
-//            System.out.println("Y1: " + y1);
-//            System.out.println("X2: " + x2);
-//            System.out.println("Y2: " + y2);
-//            System.out.println();
-//        }
-
         return remove;
     }
 }
