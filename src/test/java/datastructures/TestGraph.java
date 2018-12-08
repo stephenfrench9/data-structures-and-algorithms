@@ -133,6 +133,7 @@ public class TestGraph extends BaseTest {
         edges1.add(edge("b", "e", 4));
 
         edges1.add(edge("c", "f", 6));
+        edges1.add(edge("e", "f", 1));
 
         return new Graph<>(vertices, edges1);
 

@@ -167,29 +167,38 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
      * @throws NoPathExistsException  if there does not exist a path from the start to the end
      */
     public IList<E> findShortestPathBetween(V start, V end) {
+        //initialize
         ArrayHeap<Path> minHeap = new ArrayHeap<Path>();
         IList<E> bestPath = new DoubleLinkedList<E>();
         IList<E> steps;
-
         Path i = new Path(start);
+        Path select = i;
         minHeap.insert(i);
 
         //the heap is ready to go
-
         while(!minHeap.isEmpty()) {
             Path current = minHeap.removeMin();
-            V deathVertice = getDeathVertice(current);
-            System.out.println("the death V is: " + deathVertice);
+            if(current.mCurrentV.equals(end)) {
+                select = current;
+                break;
+            }
+
+            IList<V> pathVertices = current.mVertices;
             steps = mDic.get(current.mCurrentV);
+
             current.printVertices();
+
             for (E e : steps) {
                 V next = e.getOtherVertex(current.mCurrentV);
-                if(!next.equals(deathVertice)) {
+                if(!pathVertices.contains(next)) {
                     Path p = current.fork(next, e.getWeight());
                     minHeap.insert(p);
                 }
             }
         }
+
+        System.out.println("THE ANSWER IS");
+        select.printVertices();
 
         return bestPath;
     }
