@@ -4,6 +4,7 @@ import datastructures.concrete.*;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
+import mazes.entities.Wall;
 import misc.Searcher;
 import misc.exceptions.NoPathExistsException;
 import misc.exceptions.NotYetImplementedException;
@@ -139,6 +140,7 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
         for(KVPair<V, DoubleLinkedList<E>> v : mDic) {
              verticeSets.makeSet(v.getKey());
         }
+
         IList<E> sortedEdges = Searcher.topKSort(mEdges.size() + 1, mEdges);
 
         for(E e : sortedEdges) {
@@ -151,6 +153,7 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
                 verticeSets.union(vert1, vert2);
             }
         }
+
         return mstEdges;
     }
 
@@ -195,17 +198,6 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
         }
 
         return select.mEdges;
-    }
-
-    private V getDeathVertice(Path current) {
-        V v = current.mVertices.get(0);
-        if(current.mVertices.size()==1) {
-            v = current.mVertices.get(0);
-        } else {
-            int stl = current.mVertices.size()-2;
-            v = current.mVertices.get(stl);
-        }
-        return v;
     }
 
     private class Path implements Comparable<Path> {
