@@ -169,7 +169,6 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
     public IList<E> findShortestPathBetween(V start, V end) {
         //initialize
         ArrayHeap<Path> minHeap = new ArrayHeap<Path>();
-        IList<E> bestPath = new DoubleLinkedList<E>();
         IList<E> steps;
         Path i = new Path(start);
         Path select = i;
@@ -191,16 +190,15 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
             for (E e : steps) {
                 V next = e.getOtherVertex(current.mCurrentV);
                 if(!pathVertices.contains(next)) {
-                    Path p = current.fork(next, e.getWeight());
+                    Path p = current.fork(next, e, e.getWeight());
                     minHeap.insert(p);
                 }
             }
         }
-
         System.out.println("THE ANSWER IS");
         select.printVertices();
 
-        return bestPath;
+        return select.mEdges;
     }
 
     private V getDeathVertice(Path current) {
@@ -230,7 +228,7 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
             mCost = 0;
         }
 
-        public Path(V v, double cost, IList<E> edges, IList<V> verts) {
+        public Path(V v, E e, double cost, IList<E> edges, IList<V> verts) {
             mCurrentV = v;
             mEdges = new DoubleLinkedList<E>();
             mVertices = new DoubleLinkedList<V>();
@@ -241,11 +239,12 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
             for(E old : edges) {
                 mEdges.add(old);
             }
+            mEdges.add(e);
             mCost = cost;
         }
 
-        public Path fork(V v, double cost) {
-            Path p = new Path(v, mCost+cost, mEdges, mVertices);
+        public Path fork(V v, E e, double cost) {
+            Path p = new Path(v, e, mCost+cost, mEdges, mVertices);
             return p;
         }
 
