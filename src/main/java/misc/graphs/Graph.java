@@ -185,8 +185,6 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
             IList<V> pathVertices = current.mVertices;
             steps = mDic.get(current.mCurrentV);
 
-            current.printVertices();
-
             for (E e : steps) {
                 V next = e.getOtherVertex(current.mCurrentV);
                 if(!pathVertices.contains(next)) {
@@ -195,8 +193,6 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
                 }
             }
         }
-        System.out.println("THE ANSWER IS");
-        select.printVertices();
 
         return select.mEdges;
     }

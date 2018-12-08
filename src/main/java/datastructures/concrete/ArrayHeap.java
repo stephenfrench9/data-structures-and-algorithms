@@ -52,7 +52,7 @@ public class ArrayHeap<T extends Comparable<T>> implements IPriorityQueue<T> {
         } else {
             T min = heap[0];
             heap[0] = heap[size-1];
-            heap[size] = null;
+            heap[size-1] = null;
             size -= 1;
             down(0);
             return min;
