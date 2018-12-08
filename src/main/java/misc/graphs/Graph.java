@@ -1,9 +1,6 @@
 package misc.graphs;
 
-import datastructures.concrete.ArrayDisjointSet;
-import datastructures.concrete.ChainedHashSet;
-import datastructures.concrete.DoubleLinkedList;
-import datastructures.concrete.KVPair;
+import datastructures.concrete.*;
 import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
@@ -170,6 +167,81 @@ public class Graph<V, E extends Edge<V> & Comparable<E>> {
      * @throws NoPathExistsException  if there does not exist a path from the start to the end
      */
     public IList<E> findShortestPathBetween(V start, V end) {
-        throw new NotYetImplementedException();
+        ArrayHeap<Path> minHeap = new ArrayHeap<Path>();
+        IList<E> bestPath = new DoubleLinkedList<E>();
+        IList<E> steps = mDic.get(start);
+
+        Path i = new Path(start);
+        minHeap.insert(i);
+
+// we have just pulled i out of the queue, what do we do
+
+        Path current = minHeap.removeMin();
+
+        current.printVertices();
+        for(E e : steps) {
+            V next = e.getOtherVertex(start);
+            Path p = current.fork(next, e, e.getWeight());
+            minHeap.insert(p);
+        }
+
+        return bestPath;
+    }
+
+    private class Path implements Comparable<Path> {
+        public V mStartV;
+        public V mCurrentV;
+        public IList<E> mEdges;
+        public IList<V> mVertices;
+        public double mCost;
+
+        public Path(V v) {
+            mStartV = v;
+            mCurrentV = v;
+            mEdges = new DoubleLinkedList<E>();
+            mVertices = new DoubleLinkedList<V>();
+            mVertices.add(v);
+            mCost = 0;
+        }
+
+        public Path(V v, E e, double cost, IList<E> edges, IList<V> verts) {
+            mCurrentV = v;
+            mEdges = new DoubleLinkedList<E>();
+            mVertices = new DoubleLinkedList<V>();
+            for(V old : verts) {
+                mVertices.add(old);
+            }
+            mVertices.add(v);
+            for(E old : edges) {
+                mEdges.add(old);
+            }
+            mCost += cost;
+        }
+
+        public Path fork(V v, E e, double cost) {
+            Path p = new Path(v, e, cost, mEdges, mVertices);
+            return p;
+        }
+
+        public void printVertices() {
+            for(V v : mVertices) {
+                System.out.print(v + ", ");
+            }
+            System.out.println(":-> "+mCost);
+        }
+
+        @Override
+        public int compareTo(Path o) {
+            int greater = 0;
+
+            if(mCost > o.mCost) {
+                greater = 1;
+            } else if(mCost==o.mCost) {
+                greater = 0;
+            } else if(mCost < o.mCost) {
+                greater = -1;
+            }
+            return greater;
+        }
     }
 }
