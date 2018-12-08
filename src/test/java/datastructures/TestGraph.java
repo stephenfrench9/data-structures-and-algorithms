@@ -125,7 +125,16 @@ public class TestGraph extends BaseTest {
 
         edges.add(edge("e", "f", 7));
 
-        return new Graph<>(vertices, edges);
+        IList<SimpleEdge<String>> edges1 = new DoubleLinkedList<>();
+        edges1.add(edge("a", "b", 2));
+        edges1.add(edge("a", "c", 5));
+
+        edges1.add(edge("b", "d", 8));
+        edges1.add(edge("b", "e", 4));
+
+        edges1.add(edge("c", "f", 6));
+
+        return new Graph<>(vertices, edges1);
 
     }
 
