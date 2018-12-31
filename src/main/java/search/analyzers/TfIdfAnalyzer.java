@@ -1,5 +1,7 @@
 package search.analyzers;
 
+import datastructures.concrete.ChainedHashSet;
+import datastructures.concrete.dictionaries.ChainedHashDictionary;
 import datastructures.interfaces.IDictionary;
 import datastructures.interfaces.IList;
 import datastructures.interfaces.ISet;
@@ -7,6 +9,10 @@ import misc.exceptions.NotYetImplementedException;
 import search.models.Webpage;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.util.OptionalDouble;
+import java.util.PrimitiveIterator;
+import java.util.stream.Stream;
 
 /**
  * This class is responsible for computing how "relevant" any given document is
@@ -35,8 +41,8 @@ public class TfIdfAnalyzer {
         // You should uncomment these lines when you're ready to begin working
         // on this class.
 
-        //this.idfScores = this.computeIdfScores(webpages);
-        //this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
+        this.idfScores = this.computeIdfScores(webpages);
+        this.documentTfIdfVectors = this.computeAllDocumentTfIdfVectors(webpages);
     }
 
     // Note: this method, strictly speaking, doesn't need to exist. However,
@@ -57,7 +63,23 @@ public class TfIdfAnalyzer {
      * in any documents to their IDF score.
      */
     private IDictionary<String, Double> computeIdfScores(ISet<Webpage> pages) {
-        throw new NotYetImplementedException();
+
+
+
+//        System.out.println("Size: " + pages.size());
+//        Iterator<Webpage> it = pages.iterator();
+//
+//        while(it.hasNext()) {
+//            Webpage page = it.next();
+//            IList<String> words = page.getWords();
+//
+//            Stream.of(words).distinct().collect(ChainedHashSet::new);
+
+//            System.out.println("size: " + words.size());
+//            System.out.println("A word: " + words.get(0));
+//        }
+
+        return new ChainedHashDictionary<String, Double>();
     }
 
     /**
@@ -76,7 +98,19 @@ public class TfIdfAnalyzer {
     private IDictionary<URI, IDictionary<String, Double>> computeAllDocumentTfIdfVectors(ISet<Webpage> pages) {
         // Hint: this method should use the idfScores field and
         // call the computeTfScores(...) method.
-        throw new NotYetImplementedException();
+//        throw new NotYetImplementedException();
+        Stream.Builder<Webpage> builder = Stream.builder();
+        for(Webpage page : pages) {
+            builder.add(page);
+        }
+        Stream<Webpage> s = builder.build();
+
+        s.forEach(x -> System.out.println(x.getWords().size()));
+
+
+        System.out.println("this day");
+        ChainedHashDictionary<String, Double> tf = new ChainedHashDictionary<String, Double>();
+        return new ChainedHashDictionary<URI, IDictionary<String, Double>>();
     }
 
     /**
